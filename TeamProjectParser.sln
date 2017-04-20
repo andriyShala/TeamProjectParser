@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "ClientUi\UI.csproj", "{958EB06E-AD83-4690-92C8-E7C3FB74F423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserService", "ParserService\ParserService.csproj", "{E65CA080-6754-43A4-87C2-2AE7F4B04094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{39FC4168-0E8A-49E0-A28F-DCE81BEC4D22}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{958EB06E-AD83-4690-92C8-E7C3FB74F423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{958EB06E-AD83-4690-92C8-E7C3FB74F423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{958EB06E-AD83-4690-92C8-E7C3FB74F423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{958EB06E-AD83-4690-92C8-E7C3FB74F423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E65CA080-6754-43A4-87C2-2AE7F4B04094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E65CA080-6754-43A4-87C2-2AE7F4B04094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E65CA080-6754-43A4-87C2-2AE7F4B04094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E65CA080-6754-43A4-87C2-2AE7F4B04094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FC4168-0E8A-49E0-A28F-DCE81BEC4D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FC4168-0E8A-49E0-A28F-DCE81BEC4D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FC4168-0E8A-49E0-A28F-DCE81BEC4D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FC4168-0E8A-49E0-A28F-DCE81BEC4D22}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
