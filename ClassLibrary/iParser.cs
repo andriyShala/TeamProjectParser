@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    interface iParser
+    interface IParser
     {
-        List<Vacancy> ParseVacancy(string Vacancy);
+        List<Vacancy> ParseVacancy(string lincVacancy);
+        List<Vacancy> ParsePageVacancy(string lincVacancy, int page);
     }
 }
