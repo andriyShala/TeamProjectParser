@@ -6,44 +6,25 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-   public class Content
-    {
-        public string Tietle { get; set; }
-        public string Teat { get; set; }
-        public DateTime Date { get; set;}
-        public Content()
-        {
-            this.Tietle = String.Empty;
-            this.Teat = String.Empty;
-            this.Date = new DateTime(1999, 01, 01);
-        }
-        public Content(string Tietle,string Teat,DateTime Date)
-        {
-            this.Tietle = Tietle;
-            this.Teat = Teat;
-            this.Date = Date;
-        }
-    }
-
    public class Vacancy
     {
-       public int ID { get; set; }
         public string Сategory { get; set; }
-        public string Sity { get; set; }
-        public Content Contents { get; set; }
+        public string Location { get; set; }
+        public string Name { get; set; }
+        public string Salary { get; set; }
+        public DateTime PublicationDate { get; set; }
+        public string Description { get; set; }
         public Vacancy()
         {
-            this.ID = 0;
             this.Сategory = String.Empty;
-            this.Contents = null;
-            this.Sity = String.Empty;
+            this.Description = String.Empty;
+            this.Location = String.Empty;
         }
-        public Vacancy(int ID,string Category,string Sity,Content content)
+        public Vacancy(string Category,string Sity, string content)
         {
-            this.ID = ID;
             this.Сategory = Category;
-            this.Contents = content;
-            this.Sity = Sity;
+            this.Description = content;
+            this.Location = Sity;
         }
 
     }
