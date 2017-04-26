@@ -1,5 +1,6 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace ClassLibrary
 {
+
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,7 @@
         public string Сategory { get; set; }
 
         public string Sity { get; set; }
+
 
         public string Title { get; set; }
 

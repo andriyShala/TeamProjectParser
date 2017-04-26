@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    interface iParser
+    interface IParser
     {
-        List<Vacancy> ParseVacancy(string Vacancy);
+        List<Vacancies> StartParseAll(string keyCategory);
+        List<Vacancies> StartParseforDate(string keyCategory, DateTime date);
     }
 }
