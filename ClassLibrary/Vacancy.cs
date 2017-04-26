@@ -1,19 +1,12 @@
 ﻿namespace ClassLibrary
 {
-
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     public partial class Vacancies
     {
 
         public string Сategory { get; set; }
 
         public string Sity { get; set; }
-
 
         public string Title { get; set; }
 
