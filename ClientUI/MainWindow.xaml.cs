@@ -19,7 +19,7 @@ using MahApps.Metro.Controls;
 namespace ClientUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// MahApps.Metro.Controls.MetroWindow
     /// </summary>
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
