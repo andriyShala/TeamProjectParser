@@ -26,6 +26,7 @@ namespace ClientUI
         public MainWindow()
         {
             InitializeComponent();
+
         }
     }
 }
