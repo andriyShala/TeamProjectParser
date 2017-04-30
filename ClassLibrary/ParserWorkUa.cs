@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary;
-namespace ClassLibrary.Work.ua
+namespace ClassLibrary
 {
-    class ParserWorkUa : IParser
+    public class ParserWorkUa : IParser
     {
         public List<Vacancies> StartParseAll(string keyCategory)
         {

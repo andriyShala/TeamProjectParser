@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.IO;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-
-namespace WindowsFormsApplication1
+using ClassLibrary;
+namespace ClassLibrary
 {
-    public class ParseJobsUa : iParser
+    public class ParseJobsUa : IParser
     {
         private static string pattern = @"([0-9][0-9]*)(\s\S*)";
         Regex regex = new Regex(pattern);
@@ -59,7 +59,7 @@ namespace WindowsFormsApplication1
                                             "consulting"/*Консалтинг*/,"logistic_storage"/*логистика,доставка,склад*/,"real_estate_insurance"/*недвижимость и страхование*/,"production"/*производство*/,
                                             "restaurant_cookery"/*Рестораний бизнес,кулинария*/,"media_tv_radio"/*СИМ,ТВ,Радио*/,"telecommunications_connection"/*Телекоммуникация  извязь*/,"tourism_sport"/*Туризм и спорт*/,
                                             "work_for_students"/*Робота для студентов*/,"other"/*Другие предложения*/};
-       private Vacancy GetContentFromHttp(string href,Vacancy vac)
+       private Vacancies GetContentFromHttp(string href, Vacancies vac)
         {
             try
             {
@@ -71,18 +71,17 @@ namespace WindowsFormsApplication1
                     if (item.Attributes[0].Value == "b-vacancy-full__block b-text")
                     {
 
-                        vac.Contents.Teat = item.InnerText;
+                        vac.Description = item.InnerText;
                     }
                     else if (item.ChildNodes[0].Attributes[0].Value == "js-contacts-block")
                     {
-                        vac.PhoneNumber = item.ChildNodes[0].InnerText;
+                        vac.ContactingInfo = item.ChildNodes[0].InnerText;
                     }
                 }
             }
             catch
             {
-                vac.Contents.Teat = "";
-                vac.PhoneNumber = "";
+                
             }
 
             return vac;
@@ -102,9 +101,9 @@ namespace WindowsFormsApplication1
                 return 0;
             }
         }
-        private Vacancy getVacancyfromNode(HtmlNodeCollection child)
+        private Vacancies getVacancyfromNode(HtmlNodeCollection child)
         {
-            Vacancy tempvacancy = new Vacancy();
+            Vacancies tempvacancy = new Vacancies();
             foreach (var item2 in child)
             {
                
@@ -117,7 +116,6 @@ namespace WindowsFormsApplication1
                                 if (it.Name == "a")
                                 {
                                     tempvacancy=GetContentFromHttp(it.Attributes["href"].Value,tempvacancy);
-                                    tempvacancy.Name = it.InnerText;
                                 }
                                 else if (it.Name == "div")
                                     tempvacancy.Salary = it.InnerText;
@@ -164,9 +162,9 @@ namespace WindowsFormsApplication1
 
                 return tempvacancy;
         }
-        public List<Vacancy> ParseVacancy(string Vacancy)
+        public List<Vacancies> ParseVacancy(string Vacancy)
         {
-            List<Vacancy> temp = new List<Vacancy>();
+            List<Vacancies> temp = new List<Vacancies>();
 
             string href = "https://jobs.ua/vacancy" + Vacancy;
             string additionalPeriod = "";
@@ -193,6 +191,15 @@ namespace WindowsFormsApplication1
             }
                 return temp;
         }
-       
+
+        public List<Vacancies> StartParseAll(string keyCategory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Vacancies> StartParseforDate(string keyCategory, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

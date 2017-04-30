@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    interface IParser
+  public  interface IParser
     {
         List<Vacancies> StartParseAll(string keyCategory);
         List<Vacancies> StartParseforDate(string keyCategory, DateTime date);
