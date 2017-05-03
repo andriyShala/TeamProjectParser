@@ -1,23 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-using ClassLibrary;
+using System.Threading;
 namespace ClassLibrary
 {
     public class ParseJobsUa : IParser
     {
-        private static string pattern = @"([0-9][0-9]*)(\s\S*)";
-        Regex regex = new Regex(pattern);
+        private class primaryVacancy
+        {
+            public List<Vacancy> vac;
+            public HtmlNode node;
+            public string vacancy;
+            public primaryVacancy(ref List<Vacancy> vac, HtmlNode node, string vacancy)
+            {
+                this.vac = vac;
+                this.node = node;
+                this.vacancy = vacancy;
+            }
+        }
+        private string pattern;
+        private Task asingparse;
+        private Regex regex;
+        private HtmlWeb web;
+        private const int countMaxPool = 5;
+        private static object threadlock;
+        static int runningWorkers;
+        private Dictionary<string, string> mycategory;
+        private int idsite;
+
+
+
+        public ParseJobsUa(int idParseSite)
+        {
+            pattern = @"([0-9][0-9]*)(\s\S*)";
+            regex = new Regex(pattern);
+            HtmlWeb web = new HtmlWeb();
+            threadlock = new object();
+            runningWorkers = countMaxPool;
+            idsite = idParseSite;
+            mycategory = new Dictionary<string, string>() { { "HR, управление персоналом", "hr_human_resources" }, { "IT, WEB специалисты", "it_web_specialists" }, { "Банковское дело, ломбарды", "banking" },
+                { "Бухгалтерия, финансы, учет/аудит", "book_keeping_bank_finance_audit" }, { "Гостиничный бизнес", "hotel_business" }, { "Дизайн, творчество", "design_creative" }, { "Домашний сервис", "home_service" },
+                { "Издательство, полиграфия", "publishing_polygraphy" }, { "Консалтинг", "consulting" }, { "Красота и SPA-услуги", "beauty_spa" }, { "Легкая промышленность", "textile_industry" },
+                { "Логистика, доставка, склад", "logistic_storage" }, { "Медицина, фармацевтика", "medicine_farmatsiya" }, { "Наука, образование, переводы", "education_science_translate" },
+                { "Недвижимость и страхование", "real_estate_insurance" }, { "Офисный персонал", "office_personnel" }, { "Охрана, безопасность", "security_guard" }, { "Производство", "production" },
+                { "Реклама, маркетинг, PR", "advertising_marketing_pr" }, { "Ремонт техники и предметов быта", "repair_of_equipment" }, { "Ресторанный бизнес, кулинария", "restaurant_cookery" },
+                { "Руководство", "supervisor" }, { "Сельское хозяйство, агробизнес", "agriculture_agribusiness" }, { "СМИ, TV, Радио", "media_tv_radio" }, { "Строительство, архитектура", "building_architecture" },
+                { "Сфера развлечений", "entertainment" }, { "Телекоммуникации и связь", "telecommunications_connection" }, { "Торговля, продажи, закупки", "trade_sales_purchase" },
+                { "Транспорт, автосервис", "transport_autoservice" }, { "Туризм и спорт", "tourism_sport" }, { "Юриспруденция, право", "jurisprudence_law" }, { "Работа без квалификации", "without_qualification_job" },
+                { "Работа для студентов", "work_for_students" }, { "Работа за рубежом", "work_abroad" }, { "Людям с ограниченными возможностями", "for_people_with_disabilities" }, { "Другие предложения", "other" } };
+
+        }
         private int GetNumberMouth(string Mounth)
         {
             Mounth = Mounth.Replace(" ", "");
-            switch(Mounth)
+            switch (Mounth)
             {
                 case "января":
                     return 1;
@@ -47,84 +86,77 @@ namespace ClassLibrary
                     return 0;
             }
         }
-        HtmlWeb web = new HtmlWeb();
-    
-        public static string[] category = { "hr_human_resources"/*Hr,управления персоналом*/, "book_keeping_bank_finance_audit"/*Бухгалтерия,финанси,учет/аудит*/,"home_service"/*Домашний сервис*/,"beauty_spa"/*Красота и СПА*/,
-                                            "medicine_farmatsiya"/*Медицина,фармацевтика*/,"office_personnel"/*офісний персонал*/,"advertising_marketing_pr"/*Реклама,маркетинг,PR*/,"supervisor"/*Руководство*/,
-                                            "building_architecture"/*Строитильство,архитектура*/,"trade_sales_purchase"/*Торговля,продажи,закупки*/,"jurisprudence_law"/*Юриспруденция,право*/,"work_abroad"/*Работа за рубежом*/,
-                                            "it_web_specialists"/*It,Web специалисти*/,"hotel_business"/*гостиний бизнес*/,"publishing_polygraphy"/*Издательство,полиграфия*/,"textile_industry"/*легкая промишлиность*/,
-                                            "education_science_translate"/*наука,образование,переводи*/,"security_guard"/*Охрана,безопасность*/,"repair_of_equipment"/*Ремонт техники*/,
-                                            "agriculture_agribusiness"/*сельское хозяйство,агробизнес*/,"entertainment"/*Сфера развичений*/,"transport_autoservice"/*Транспорт,автосервис*/,
-                                            "without_qualification_job"/*Робота без квалификации*/,"for_people_with_disabilities"/*инвалидам*/,"banking"/*Банковское дело,ломбарди*/,"design_creative"/*Дизайн,творчество*/,
-                                            "consulting"/*Консалтинг*/,"logistic_storage"/*логистика,доставка,склад*/,"real_estate_insurance"/*недвижимость и страхование*/,"production"/*производство*/,
-                                            "restaurant_cookery"/*Рестораний бизнес,кулинария*/,"media_tv_radio"/*СИМ,ТВ,Радио*/,"telecommunications_connection"/*Телекоммуникация  извязь*/,"tourism_sport"/*Туризм и спорт*/,
-                                            "work_for_students"/*Робота для студентов*/,"other"/*Другие предложения*/};
-       private Vacancies GetContentFromHttp(string href, Vacancies vac)
+        private Vacancy GetContentFromHttp(string href, Vacancy vac)
         {
-            try
+            HtmlAgilityPack.HtmlDocument document = web.Load(href);
+            HtmlNode[] links = document.DocumentNode.SelectNodes("//div[@class='b-vacancy-full js-item_full']").ToArray();
+            foreach (var item in links[0].ChildNodes)
             {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument document = web.Load(href);
-                HtmlNode[] links = document.DocumentNode.SelectNodes("//div[@class='b-vacancy-full js-item_full']").ToArray();
-                foreach (var item in links[0].ChildNodes)
+                try
                 {
-                    if (item.Attributes[0].Value == "b-vacancy-full__block b-text")
-                    {
-
+                    if (item.Attributes["class"].Value == "b-vacancy-full__block b-text")
                         vac.Description = item.InnerText;
-                    }
-                    else if (item.ChildNodes[0].Attributes[0].Value == "js-contacts-block")
+                    else if (item.ChildNodes[0].Attributes["class"].Value == "js-contacts-block")
                     {
-                        vac.ContactingInfo = item.ChildNodes[0].InnerText;
+                        vac.PhoneNumber = item.ChildNodes[0].InnerText;
+                        return vac;
                     }
                 }
+                catch
+                {
+                    vac.Description = "()";
+                }
             }
-            catch
-            {
-                
-            }
-
             return vac;
         }
         private int GetnumbersOfPage(string href)
         {
             try
             {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument document = web.Load(href);
+
+                HtmlAgilityPack.HtmlDocument document = web.Load(href);
                 HtmlNode[] links = document.DocumentNode.SelectNodes("//div[@class='b-pager__inner']").ToArray();
                 string s = links[0].ChildNodes[links[0].ChildNodes.Count - 1].InnerText;
                 return Convert.ToInt32(s);
             }
-            catch
+            catch (Exception ex)
             {
+               
                 return 0;
             }
         }
-        private Vacancies getVacancyfromNode(HtmlNodeCollection child)
+        private Vacancy getVacancyfromNode(HtmlNode child, string category)
         {
-            Vacancies tempvacancy = new Vacancies();
-            foreach (var item2 in child)
+            Vacancy tempvacancy = new Vacancy();
+            tempvacancy.Сategory = category;
+            tempvacancy.ParseSiteId = idsite;
+            tempvacancy.VacancyId = Convert.ToInt32(child.Attributes["id"].Value);
+            foreach (var item2 in child.ChildNodes)
             {
-               
+
                 if (item2.Name != "#text")
                     switch (item2.Attributes[0].Value)
                     {
                         case "b-vacancy__top":
                             foreach (var it in item2.ChildNodes)
                             {
+                                if (it.Name == "br" || it.Name == "#text")
+                                    continue;
                                 if (it.Name == "a")
                                 {
-                                    tempvacancy=GetContentFromHttp(it.Attributes["href"].Value,tempvacancy);
+                                    tempvacancy.VacancyHref = it.Attributes["href"].Value;
+                                    tempvacancy = GetContentFromHttp(tempvacancy.VacancyHref, tempvacancy);
+                                    tempvacancy.Title = it.InnerText;
                                 }
                                 else if (it.Name == "div")
-                                    tempvacancy.Salary = it.InnerText;
+                                    tempvacancy.Salary = it.InnerText.Replace("&nbsp;","");
                                 else if (it.Name == "span")
                                 {
                                     string input = it.InnerText;
                                     input.Replace("&nbsp;", "");
                                     MatchCollection match = regex.Matches(input);
-                                        tempvacancy.Date = new DateTime(DateTime.Now.Year,GetNumberMouth(match[0].Groups[2].Value),Convert.ToInt32(match[0].Groups[1].Value));
+                                    tempvacancy.PublicationDate = new DateTime(DateTime.Now.Year, GetNumberMouth(match[0].Groups[2].Value), Convert.ToInt32(match[0].Groups[1].Value));
+                                    break;
                                 }
                             }
                             break;
@@ -132,10 +164,15 @@ namespace ClassLibrary
                             foreach (var it in item2.ChildNodes)
                             {
                                 if (it.Name != "#text")
-                                    if (it.Attributes[0].Value == "b-vacancy__tech__item")
-                                        tempvacancy.Company = it.InnerText;
+                                    if (it.Attributes["class"].Value == "b-vacancy__tech__item")
+                                        tempvacancy.Company = it.InnerText.Replace(" ","");
                                     else
-                                        tempvacancy.Sity = it.ChildNodes[2].InnerText;
+                                    {
+                                        if (it.ChildNodes.Count > 2)
+                                            tempvacancy.Location = it.ChildNodes[2].InnerText;
+
+                                        break;
+                                    }
                             }
                             break;
                         case "b-vacancy__tech__item":
@@ -148,7 +185,7 @@ namespace ClassLibrary
                                     tempvacancy.Experience = item2.ChildNodes[3].InnerText;
                                     break;
                                 case "График работы":
-                                    tempvacancy.WorkSchedule = item2.ChildNodes[3].InnerText;
+                                    tempvacancy.TypeOfEmployment = item2.ChildNodes[3].InnerText;
                                     break;
                                 default:
                                     break;
@@ -160,46 +197,242 @@ namespace ClassLibrary
                     }
             }
 
-                return tempvacancy;
+            return tempvacancy;
         }
-        public List<Vacancies> ParseVacancy(string Vacancy)
-        {
-            List<Vacancies> temp = new List<Vacancies>();
 
-            string href = "https://jobs.ua/vacancy" + Vacancy;
+        public List<Vacancy> ParseVacancy(string Vacancykey)
+        {
+            string valuecategory = null;
+            try
+            {
+                valuecategory = mycategory[Vacancykey];
+            }
+            catch
+            {
+                return new List<Vacancy>();
+            }
+            ThreadPool.SetMaxThreads(countMaxPool, countMaxPool);
+            List<Vacancy> temp = new List<Vacancy>();
+            List<Vacancy> temp2 = new List<Vacancy>();
+            string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
             int countpages = GetnumbersOfPage(href);
-            for (int i = 1; i < countpages; i++)
+            for (int i = 1; i <= countpages; i++)
             {
-                if (i > 1)
-                    additionalPeriod = "/page-" + i;
-                HtmlDocument document=null;
-                HtmlNode[] links=null;
-                try
-                {
-                    document = web.Load(href + additionalPeriod);
-                    links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
-                }
-                catch
-                {
-                    throw new Exception("Недоступний сайт");
-                }
+                additionalPeriod = "/page-" + i;
+                HtmlAgilityPack.HtmlDocument document = null;
+                HtmlNode[] links = null;
+
+                document = web.Load(href + additionalPeriod);
+                links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                List<HtmlNode> sitesvacancy = new List<HtmlNode>();
                 foreach (var item in links[0].ChildNodes)
                 {
-                    temp.Add(getVacancyfromNode(item.ChildNodes));
+
+                    if (item.Name != "#text")
+                        if (item.ChildNodes.Count > 5)
+                        {
+                            if (sitesvacancy.Count < countMaxPool)
+                            {
+                                sitesvacancy.Add(item);
+                            }
+                            if (asingparse == null && sitesvacancy.Count >= countMaxPool)
+                            {
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                asingparse.Start();
+                                sitesvacancy.Clear();
+                            }
+                            if (asingparse != null && sitesvacancy.Count >= countMaxPool)
+                            {
+                                while (temp2.Count != countMaxPool)
+                                {
+
+                                }
+                                temp.AddRange(temp2);
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                asingparse.Start();
+                                sitesvacancy.Clear();
+
+                            }
+                        }
                 }
+                if (asingparse != null)
+                {
+                    while (temp2.Count != countMaxPool)
+                    {
+
+                    }
+                    temp.AddRange(temp2);
+
+                }
+                if (sitesvacancy.Count != 0)
+                {
+                    asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                    asingparse.Start();
+                    while (temp2.Count != sitesvacancy.Count)
+                    {
+                    }
+                    temp.AddRange(temp2);
+                    temp2.Clear();
+                }
+
             }
-                return temp;
+            return temp;
+        }
+        public List<Vacancy> ParseDayVacancy(DateTime date, string Vacancykey)
+        {
+            string valuecategory = null;
+            try
+            {
+                valuecategory = mycategory[Vacancykey];
+            }
+            catch
+            {
+                return new List<Vacancy>();
+            }
+          
+            bool endread = false;
+            ThreadPool.SetMaxThreads(countMaxPool, countMaxPool);
+            List<Vacancy> temp = new List<Vacancy>();
+            List<Vacancy> temp2 = new List<Vacancy>();
+            string href = "https://jobs.ua/vacancy/" + valuecategory;
+            string additionalPeriod = "";
+            int countpages = GetnumbersOfPage(href);
+            for (int i = 1; i <= countpages; i++)
+            {
+                if (endread == true)
+                {
+                    break;
+                }
+                additionalPeriod = "/page-" + i;
+                HtmlAgilityPack.HtmlDocument document = null;
+                HtmlNode[] links = null;
+
+                document = web.Load(href + additionalPeriod);
+                links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                List<HtmlNode> sitesvacancy = new List<HtmlNode>();
+                foreach (var item in links[0].ChildNodes)
+                {
+                    if (endread == true)
+                    { break; }
+                    if (item.Name != "#text")
+                        if (item.ChildNodes.Count > 5)
+                        {
+                            if (sitesvacancy.Count < countMaxPool)
+                            {
+                                sitesvacancy.Add(item);
+                            }
+                            if (asingparse == null && sitesvacancy.Count >= countMaxPool)
+                            {
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                asingparse.Start();
+                                sitesvacancy.Clear();
+                            }
+                            if (asingparse != null && sitesvacancy.Count >= countMaxPool)
+                            {
+                                while (temp2.Count != countMaxPool)
+                                {
+
+                                }
+                                foreach (var it in temp2)
+                                {
+                                    if (it.PublicationDate.Day != date.Day)
+                                    {
+                                        break;
+                                        endread = true;
+                                    }
+                                    else
+                                        temp.Add(it);
+                                }
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                asingparse.Start();
+                                sitesvacancy.Clear();
+
+                            }
+                        }
+                }
+                if (asingparse != null)
+                {
+                    while (temp2.Count != countMaxPool)
+                    {
+
+                    }
+                    foreach (var it in temp2)
+                    {
+                        if (it.PublicationDate.Day != date.Day)
+                        {
+                            break;
+                            endread = true;
+                        }
+                        else
+                            temp.Add(it);
+                    }
+
+                }
+                if (sitesvacancy.Count != 0)
+                {
+                    asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                    asingparse.Start();
+                    while (temp2.Count != sitesvacancy.Count)
+                    {
+                    }
+                    foreach (var it in temp2)
+                    {
+                        if (it.PublicationDate.Day != date.Day)
+                        {
+                            break;
+                            endread = true;
+                        }
+                        else
+                            temp.Add(it);
+                    }
+                    temp2.Clear();
+                }
+
+            }
+            return temp;
+
         }
 
-        public List<Vacancies> StartParseAll(string keyCategory)
+
+        private List<Vacancy> Parsevac5(List<HtmlNode> node, string Vacancy)
         {
-            throw new NotImplementedException();
+            runningWorkers = countMaxPool;
+            List<Vacancy> listVac = new List<Vacancy>();
+            for (int i = 0; i < node.Count; i++)
+            {
+                ThreadPool.QueueUserWorkItem(getVacancyfromPrimaryVacancy, new primaryVacancy(ref listVac, node[i], Vacancy));
+            }
+                while (runningWorkers > 0)
+                {
+                    Monitor.Wait(threadlock);
+                }
+            return listVac;
+        }
+        private void getVacancyfromPrimaryVacancy(object ev)
+        {
+            primaryVacancy tempEV = ev as primaryVacancy;
+            Vacancy vac = new Vacancy();
+            vac = getVacancyfromNode(tempEV.node, tempEV.vacancy);
+            lock (threadlock)
+            {
+                tempEV.vac.Add(vac);
+                runningWorkers--;
+                Monitor.Pulse(threadlock);
+            }
         }
 
-        public List<Vacancies> StartParseforDate(string keyCategory, DateTime date)
+        public List<Vacancy> StartParseAll(string keyCategory)
         {
-            throw new NotImplementedException();
+            return ParseVacancy(keyCategory);
         }
+
+        public List<Vacancy> StartParseforDate(string keyCategory, DateTime date)
+        {
+            return ParseDayVacancy(date, keyCategory);
+        }
+
+
+
     }
 }

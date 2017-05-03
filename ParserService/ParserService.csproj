@@ -99,17 +99,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Service1.svc" />
+    <Content Include="ParseService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBmodel.cs" />
-    <Compile Include="Service1.svc.cs">
-      <DependentUpon>Service1.svc</DependentUpon>
+    <Compile Include="ParseService.svc.cs">
+      <DependentUpon>ParseService.svc</DependentUpon>
     </Compile>
-    <Compile Include="IService1.cs" />
+    <Compile Include="IParseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Site.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
