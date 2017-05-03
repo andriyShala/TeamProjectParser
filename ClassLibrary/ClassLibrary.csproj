@@ -41,8 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="iParser.cs" />
+    <Compile Include="Jobs.ua\ParseJobsUa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rabota.ua\ParseRabotaUa.cs" />
     <Compile Include="Vacancy.cs" />
+    <Compile Include="Work.ua\ParserWorkUa.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
