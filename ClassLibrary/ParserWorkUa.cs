@@ -8,12 +8,16 @@ namespace ClassLibrary
 {
     public class ParserWorkUa : IParser
     {
-        public List<Vacancies> StartParseAll(string keyCategory)
+       public ParserWorkUa(int id)
+        {
+
+        }
+        public List<Vacancy> StartParseAll(string keyCategory)
         {
             throw new NotImplementedException();
         }
 
-        public List<Vacancies> StartParseforDate(string keyCategory, DateTime date)
+        public List<Vacancy> StartParseforDate(string keyCategory, DateTime date)
         {
             throw new NotImplementedException();
         }

@@ -8,7 +8,7 @@ namespace ClassLibrary
 {
   public  interface IParser
     {
-        List<Vacancies> StartParseAll(string keyCategory);
-        List<Vacancies> StartParseforDate(string keyCategory, DateTime date);
+        List<Vacancy> StartParseAll(string keyCategory);
+        List<Vacancy> StartParseforDate(string keyCategory, DateTime date);
     }
 }

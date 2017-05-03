@@ -13,7 +13,7 @@ namespace ParserService
         {
         }
 
-        public virtual DbSet<Vacancies> Vacancies { get; set; }
+        public virtual DbSet<Vacancy> Vacancies { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
