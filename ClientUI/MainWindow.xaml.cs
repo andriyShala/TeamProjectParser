@@ -16,6 +16,7 @@ using MahApps;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 
+
 namespace ClientUI
 {
     /// <summary>
@@ -26,6 +27,8 @@ namespace ClientUI
         public MainWindow()
         {
             InitializeComponent();
+            
+            
 
         }
     }

@@ -58,6 +58,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="2">
+                        <Label>Vacancies:</Label>
+                        <ListBox x:Name="vacanciesListBox"></ListBox>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
