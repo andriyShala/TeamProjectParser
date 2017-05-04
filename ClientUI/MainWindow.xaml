@@ -14,29 +14,34 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150*"/>
                         <ColumnDefinition Width="150*"/>
-                        <ColumnDefinition Width="150*"/>
+
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Margin="2" Grid.Column="0" Grid.Row="0">
+                    <StackPanel Margin="2" Grid.ColumnSpan="2" Grid.Row="0">
+                        <Label >Search:</Label>
+                        <TextBox x:Name="searchBox"></TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="2" Grid.Column="0" Grid.Row="1">
                         <Label >Site:</Label>
                         <ComboBox x:Name="siteChooseCB" ></ComboBox>
                     </StackPanel>
-                    <StackPanel  Margin="2" Grid.Column="1" Grid.Row="0">
+                    <StackPanel  Margin="2" Grid.Column="1" Grid.Row="1">
                         <Label >Category:</Label>
                         <ComboBox x:Name="categoryChooseCB" ></ComboBox>
                     </StackPanel>
-                    <StackPanel  Margin="2" Grid.Column="2" Grid.Row="0">
+                    <StackPanel  Margin="2" Grid.Column="1" Grid.Row="2">
                         <Label >Region:</Label>
                         <ComboBox x:Name="regionChooseCB" ></ComboBox>
                     </StackPanel>
                     <Button Grid.Column="3"  Style="{DynamicResource MetroCircleButtonStyle}">
                         <Image Width="30" Height="30" Source="Img/search.png" />
                     </Button>
-                    <StackPanel  Margin="2" Grid.Column="0" Grid.Row="1">
+                    <StackPanel  Margin="2" Grid.Column="0" Grid.Row="2">
                         <Label >Date:</Label>
                         <ComboBox x:Name="dateBox">
                             <ComboBoxItem Content="1"/>
@@ -45,7 +50,7 @@
                             <ComboBoxItem Content="30"/>
                         </ComboBox>
                     </StackPanel>
-                 
+
                 </Grid>
             </TabItem>
             <TabItem Header="Result">
