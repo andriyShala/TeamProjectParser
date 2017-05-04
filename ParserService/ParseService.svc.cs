@@ -14,7 +14,7 @@ namespace ParserService
         DBmodel model = new DBmodel();
         public ParseService()
         {
-            if (model.Sites.Count() != 0)
+            if (model.Sites.Count() == 0)
             {
                 model.Sites.Add(new Site() { id = 523, name = "Jobs.ua" });
                 model.Sites.Add(new Site() { id = 325, name = "Rabota.ua" });
@@ -99,12 +99,15 @@ namespace ParserService
             return names;
         }
 
-        public List<Vacancy> GetVacancies(string Category, string City, string Site)
+        public List<Vacancy> GetVacancies(string Category, string City, string Site,int Day)
         {
+          
+          
             if(Category!=null&&City==null&&Site==null)
             {
                 try
                 {
+
                     return model.Vacancies.Where(x => x.Сategory == Category).ToList();
                 }
                 catch
@@ -190,7 +193,7 @@ namespace ParserService
 
         }
 
-        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site)
+        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site,int Day)
         {
         
             if (Category != null && City == null && Site == null)
