@@ -39,6 +39,7 @@
                     <StackPanel  Margin="2" Grid.Column="0" Grid.Row="1">
                         <Label >Date:</Label>
                         <ComboBox x:Name="dateBox">
+                            <ComboBoxItem Content="1"/>
                             <ComboBoxItem Content="7"/>
                             <ComboBoxItem Content="14"/>
                             <ComboBoxItem Content="30"/>
