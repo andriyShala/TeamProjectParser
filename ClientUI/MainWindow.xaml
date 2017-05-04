@@ -38,7 +38,7 @@
                         <Label >Region:</Label>
                         <ComboBox x:Name="regionChooseCB" ></ComboBox>
                     </StackPanel>
-                    <Button Grid.Column="3"  Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Button x:Name="searchBut" Click="SearchBut_OnClick" Grid.Column="3"  Style="{DynamicResource MetroCircleButtonStyle}">
                         <Image Width="30" Height="30" Source="Img/search.png" />
                     </Button>
                     <StackPanel  Margin="2" Grid.Column="0" Grid.Row="2">
