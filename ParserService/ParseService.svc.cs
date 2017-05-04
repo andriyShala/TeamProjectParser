@@ -99,7 +99,7 @@ namespace ParserService
             return names;
         }
 
-        public List<Vacancy> GetVacancies(string Category, string City, string Site)
+        public List<Vacancy> GetVacancies(string Category, string City, string Site,int Day)
         {
             if(Category!=null&&City==null&&Site==null)
             {
@@ -190,7 +190,7 @@ namespace ParserService
 
         }
 
-        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site)
+        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site,int Day)
         {
         
             if (Category != null && City == null && Site == null)
