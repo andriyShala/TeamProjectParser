@@ -303,28 +303,34 @@ namespace ClientUI.ServiceReference1 {
     public interface IParseService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacancies", ReplyAction="http://tempuri.org/IParseService/GetVacanciesResponse")]
-        System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy> GetVacancies(string Category, string City, string Site, int Day);
+        ClientUI.ServiceReference1.Vacancy[] GetVacancies(string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacancies", ReplyAction="http://tempuri.org/IParseService/GetVacanciesResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy>> GetVacanciesAsync(string Category, string City, string Site, int Day);
+        System.Threading.Tasks.Task<ClientUI.ServiceReference1.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacanciesBySearch", ReplyAction="http://tempuri.org/IParseService/GetVacanciesBySearchResponse")]
-        System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day);
+        ClientUI.ServiceReference1.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacanciesBySearch", ReplyAction="http://tempuri.org/IParseService/GetVacanciesBySearchResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy>> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day);
+        System.Threading.Tasks.Task<ClientUI.ServiceReference1.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetSites", ReplyAction="http://tempuri.org/IParseService/GetSitesResponse")]
-        System.Collections.ObjectModel.ObservableCollection<string> GetSites();
+        string[] GetSites();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetSites", ReplyAction="http://tempuri.org/IParseService/GetSitesResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<string>> GetSitesAsync();
+        System.Threading.Tasks.Task<string[]> GetSitesAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetCategory", ReplyAction="http://tempuri.org/IParseService/GetCategoryResponse")]
-        System.Collections.ObjectModel.ObservableCollection<string> GetCategory();
+        string[] GetCategory();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetCategory", ReplyAction="http://tempuri.org/IParseService/GetCategoryResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<string>> GetCategoryAsync();
+        System.Threading.Tasks.Task<string[]> GetCategoryAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetCity", ReplyAction="http://tempuri.org/IParseService/GetCityResponse")]
+        string[] GetCity();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetCity", ReplyAction="http://tempuri.org/IParseService/GetCityResponse")]
+        System.Threading.Tasks.Task<string[]> GetCityAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -354,36 +360,44 @@ namespace ClientUI.ServiceReference1 {
                 base(binding, remoteAddress) {
         }
         
-        public System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy> GetVacancies(string Category, string City, string Site, int Day) {
+        public ClientUI.ServiceReference1.Vacancy[] GetVacancies(string Category, string City, string Site, int Day) {
             return base.Channel.GetVacancies(Category, City, Site, Day);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy>> GetVacanciesAsync(string Category, string City, string Site, int Day) {
+        public System.Threading.Tasks.Task<ClientUI.ServiceReference1.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesAsync(Category, City, Site, Day);
         }
         
-        public System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day) {
+        public ClientUI.ServiceReference1.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesBySearch(NameVacancy, Category, City, Site, Day);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<ClientUI.ServiceReference1.Vacancy>> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day) {
+        public System.Threading.Tasks.Task<ClientUI.ServiceReference1.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesBySearchAsync(NameVacancy, Category, City, Site, Day);
         }
         
-        public System.Collections.ObjectModel.ObservableCollection<string> GetSites() {
+        public string[] GetSites() {
             return base.Channel.GetSites();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<string>> GetSitesAsync() {
+        public System.Threading.Tasks.Task<string[]> GetSitesAsync() {
             return base.Channel.GetSitesAsync();
         }
         
-        public System.Collections.ObjectModel.ObservableCollection<string> GetCategory() {
+        public string[] GetCategory() {
             return base.Channel.GetCategory();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<string>> GetCategoryAsync() {
+        public System.Threading.Tasks.Task<string[]> GetCategoryAsync() {
             return base.Channel.GetCategoryAsync();
+        }
+        
+        public string[] GetCity() {
+            return base.Channel.GetCity();
+        }
+        
+        public System.Threading.Tasks.Task<string[]> GetCityAsync() {
+            return base.Channel.GetCityAsync();
         }
     }
 }

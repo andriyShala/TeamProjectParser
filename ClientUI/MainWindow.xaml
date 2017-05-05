@@ -56,12 +56,12 @@
             <TabItem Header="Result">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="150*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="2">
-                        <Label>Vacancies:</Label>
-                        <ListBox x:Name="vacanciesListBox"></ListBox>
-                    </StackPanel>
+                  
+                    <ListBox Grid.Column="0" x:Name="vacanciesListBox"></ListBox>
+                   
                 </Grid>
             </TabItem>
         </TabControl>

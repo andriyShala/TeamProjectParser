@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="HgFit7UcBsrsn6wott/rzIXszzk=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="2pZCt6vKPwOWEr5Hc3bSDA5VEWw=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IParseService">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IParseService" contract="ServiceReference1.IParseService" bindingType="basicHttpBinding" address="http://192.168.31.4:54458/ParseService.svc" bindingConfiguration="BasicHttpBinding_IParseService">
+    <endpoint name="BasicHttpBinding_IParseService" contract="ServiceReference1.IParseService" bindingType="basicHttpBinding" address="http://andriyshala-001-site1.gtempurl.com/ParseService.svc" bindingConfiguration="BasicHttpBinding_IParseService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://192.168.31.4:54458/ParseService.svc</serializedValue>
+          <serializedValue>http://andriyshala-001-site1.gtempurl.com/ParseService.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

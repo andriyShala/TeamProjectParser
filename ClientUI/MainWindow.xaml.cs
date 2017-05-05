@@ -26,6 +26,7 @@ namespace ClientUI
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         private ServiceReference1.ParseServiceClient client;
+        ServiceReference1.Vacancy []vacancies;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,15 +43,36 @@ namespace ClientUI
                 categoryChooseCB.Items.Add(item);
             }
             categoryChooseCB.SelectedIndex = 0;
-
+            var cities = client.GetCity();
+            foreach (var item in cities)
+            {
+                regionChooseCB.Items.Add(item);
+            }
+            regionChooseCB.SelectedIndex = 0;
+            dateBox.SelectedIndex = 0;
         }
 
       
 
         private void SearchBut_OnClick(object sender, RoutedEventArgs e)
         {
-           var a =  client.GetVacancies(categoryChooseCB.SelectedItem.ToString(),null,null,1);
-            MessageBox.Show("" + a[0].VacancyId);
+            vacanciesListBox.Items.Clear();
+          if(String.IsNullOrEmpty(searchBox.Text))
+            {
+                vacancies = client.GetVacancies(categoryChooseCB.Text, regionChooseCB.Text, siteChooseCB.Text, Convert.ToInt32(dateBox.Text));
+                foreach (var item in vacancies)
+                {
+                    vacanciesListBox.Items.Add(item.VacancyId + ": " + item.Title);
+                }
+            }
+            else
+            {
+                vacancies = client.GetVacanciesBySearch(searchBox.Text,categoryChooseCB.Text, regionChooseCB.Text, siteChooseCB.Text, Convert.ToInt32(dateBox.Text));
+                foreach (var item in vacancies)
+                {
+                    vacanciesListBox.Items.Add(item.VacancyId + ": " + item.Title);
+                }
+            }
         }
     }
 }
