@@ -4,6 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientUI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Vacantion Parser" Height="500" Width="700">
@@ -56,12 +59,106 @@
             <TabItem Header="Result">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="80*"/>
                         <ColumnDefinition Width="150*"/>
                     </Grid.ColumnDefinitions>
-                  
-                    <ListBox Grid.Column="0" x:Name="vacanciesListBox"></ListBox>
-                   
+
+                    <ListBox SelectionChanged="VacanciesListBox_OnSelectionChanged" Grid.Column="0" x:Name="vacanciesListBox"></ListBox>
+                    <ScrollViewer  Grid.Column="1">
+                        <StackPanel>
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Title:</Label>
+                                    <TextBlock  TextWrapping="Wrap"  Padding="2"   Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="titleB">Title</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Category:</Label>
+                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="categoryB">Сategory</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Location:</Label>
+                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="locationB">Location</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Company:</Label>
+                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="companyB">Company</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>PhoneNumber:</Label>
+                                    <TextBox IsReadOnly="True" TextWrapping="Wrap" Padding="2"  x:Name="phoneNumberB">PhoneNumber</TextBox>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>ContactPerson:</Label>
+                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="contactPersonB">ContactPerson</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>CompanyWebSite:</Label>
+                                    <TextBlock   TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}">   <Hyperlink Foreground="Indigo" Click="CompanyWebSiteB_OnClick"  x:Name="companyWebSiteB" NavigateUri="http://stackoverflow.com"> link </Hyperlink></TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>PublicationDate:</Label>
+                                    <TextBlock TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="publicationDateB">PublicationDate</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card> 
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Experience:</Label>
+                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="experienceB">Experience</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+                            
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Education:</Label>
+                                    <TextBlock TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="educationB">Education</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Salary:</Label>
+                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="salaryB">Salary</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>Description:</Label>
+                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="descriptionB"> Description</TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <materialDesign:Card Margin="2">
+                                <StackPanel>
+                                    <Label>VacancyHref:</Label>
+                                    <TextBlock   TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}">   <Hyperlink Foreground="Indigo" Click="VacancyHrefB_OnClick"  x:Name="vacancyHrefB" NavigateUri="http://stackoverflow.com">  link </Hyperlink></TextBlock>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </TabItem>
         </TabControl>
