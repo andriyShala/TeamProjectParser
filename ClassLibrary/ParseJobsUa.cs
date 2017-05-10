@@ -27,6 +27,8 @@ namespace ClassLibrary
         private HtmlWeb web;
         private const int countMaxPool = 5;
         private static object threadlock;
+        private static object threadlock2;
+
         static int runningWorkers;
         private Dictionary<string, string> mycategory;
         private int idsite;
@@ -37,8 +39,9 @@ namespace ClassLibrary
         {
             pattern = @"([0-9][0-9]*)(\s\S*)";
             regex = new Regex(pattern);
-            HtmlWeb web = new HtmlWeb();
+            web = new HtmlWeb();
             threadlock = new object();
+            threadlock2 = new object();
             runningWorkers = countMaxPool;
             idsite = idParseSite;
             mycategory = new Dictionary<string, string>() { { "HR, управление персоналом", "hr_human_resources" }, { "IT, WEB специалисты", "it_web_specialists" }, { "Банковское дело, ломбарды", "banking" },
@@ -98,7 +101,21 @@ namespace ClassLibrary
                         vac.Description = item.InnerText;
                     else if (item.ChildNodes[0].Attributes["class"].Value == "js-contacts-block")
                     {
-                        vac.PhoneNumber = item.ChildNodes[0].InnerText;
+                        foreach (var item1 in item.ChildNodes[0].ChildNodes.Where(x=>x.Name=="div"))
+                        {
+                            if (item1.InnerText.Contains("Телефон:"))
+                                vac.PhoneNumber = item1.InnerText.Replace("Телефон:", "");
+                            else if (item1.InnerText.Contains("Контактное лицо:"))
+                                vac.ContactPerson = item1.InnerText.Replace("Контактное лицо:", "");
+                            else if(item1.InnerText.Contains("Адрес:"))
+                            {
+                                if (vac.ContactPerson == null)
+                                    vac.ContactPerson = String.Empty;
+                                vac.ContactPerson += item1.InnerText;
+                            }
+                            else if(item1.InnerText.Contains("Сайт:"))
+                                vac.CompanyWebSite=item1.InnerText.Replace("Сайт:","");
+                        }
                         return vac;
                     }
                 }
@@ -127,21 +144,19 @@ namespace ClassLibrary
         }
         private Vacancy getVacancyfromNode(HtmlNode child, string category)
         {
+            if (child == null)
+                return null;
             Vacancy tempvacancy = new Vacancy();
             tempvacancy.Сategory = category;
             tempvacancy.ParseSiteId = idsite;
             tempvacancy.VacancyId = Convert.ToInt32(child.Attributes["id"].Value);
-            foreach (var item2 in child.ChildNodes)
+            foreach (var item2 in child.ChildNodes.Where(x=>x.NodeType!=HtmlNodeType.Text))
             {
-
-                if (item2.Name != "#text")
                     switch (item2.Attributes[0].Value)
                     {
                         case "b-vacancy__top":
-                            foreach (var it in item2.ChildNodes)
+                            foreach (var it in item2.ChildNodes.Where(x=>x.NodeType!=HtmlNodeType.Text||x.Name!="br"))
                             {
-                                if (it.Name == "br" || it.Name == "#text")
-                                    continue;
                                 if (it.Name == "a")
                                 {
                                     tempvacancy.VacancyHref = it.Attributes["href"].Value;
@@ -161,9 +176,8 @@ namespace ClassLibrary
                             }
                             break;
                         case "b-vacancy__tech":
-                            foreach (var it in item2.ChildNodes)
+                            foreach (var it in item2.ChildNodes.Where(item=>item.NodeType!=HtmlNodeType.Text))
                             {
-                                if (it.Name != "#text")
                                     if (it.Attributes["class"].Value == "b-vacancy__tech__item")
                                         tempvacancy.Company = it.InnerText.Replace(" ","");
                                     else
@@ -226,10 +240,8 @@ namespace ClassLibrary
                 document = web.Load(href + additionalPeriod);
                 links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
                 List<HtmlNode> sitesvacancy = new List<HtmlNode>();
-                foreach (var item in links[0].ChildNodes)
+                foreach (var item in links[0].ChildNodes.Where(x => x.NodeType !=HtmlNodeType.Text))
                 {
-
-                    if (item.Name != "#text")
                         if (item.ChildNodes.Count > 5)
                         {
                             if (sitesvacancy.Count < countMaxPool)
@@ -238,7 +250,8 @@ namespace ClassLibrary
                             }
                             if (asingparse == null && sitesvacancy.Count >= countMaxPool)
                             {
-                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                List<HtmlNode> tempsitevac = sitesvacancy.ToList();
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(tempsitevac, Vacancykey); });
                                 asingparse.Start();
                                 sitesvacancy.Clear();
                             }
@@ -249,7 +262,9 @@ namespace ClassLibrary
 
                                 }
                                 temp.AddRange(temp2);
-                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                temp2.Clear();
+                                List<HtmlNode> tempsitevac = sitesvacancy.ToList();
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(tempsitevac, Vacancykey); });
                                 asingparse.Start();
                                 sitesvacancy.Clear();
 
@@ -267,7 +282,8 @@ namespace ClassLibrary
                 }
                 if (sitesvacancy.Count != 0)
                 {
-                    asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                    List<HtmlNode> tempsitevac = sitesvacancy.ToList();
+                    asingparse = new Task(delegate () { temp2 = Parsevac5(tempsitevac, Vacancykey); });
                     asingparse.Start();
                     while (temp2.Count != sitesvacancy.Count)
                     {
@@ -302,7 +318,7 @@ namespace ClassLibrary
             {
                 if (endread == true)
                 {
-                    break;
+                    return temp;
                 }
                 additionalPeriod = "/page-" + i;
                 HtmlAgilityPack.HtmlDocument document = null;
@@ -311,62 +327,77 @@ namespace ClassLibrary
                 document = web.Load(href + additionalPeriod);
                 links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
                 List<HtmlNode> sitesvacancy = new List<HtmlNode>();
-                foreach (var item in links[0].ChildNodes)
+                foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
                     if (endread == true)
                     { break; }
-                    if (item.Name != "#text")
                         if (item.ChildNodes.Count > 5)
                         {
                             if (sitesvacancy.Count < countMaxPool)
-                            {
                                 sitesvacancy.Add(item);
-                            }
                             if (asingparse == null && sitesvacancy.Count >= countMaxPool)
                             {
-                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
+                                List<HtmlNode> tempsitevac = sitesvacancy.ToList();
+                                asingparse = new Task(delegate () { temp2 = Parsevac5(tempsitevac, Vacancykey); });
                                 asingparse.Start();
                                 sitesvacancy.Clear();
                             }
-                            if (asingparse != null && sitesvacancy.Count >= countMaxPool)
-                            {
-                                while (temp2.Count != countMaxPool)
-                                {
-
-                                }
+                        if (asingparse != null && sitesvacancy.Count >= countMaxPool)
+                        {
+                               
+                                   while (temp2.Count != countMaxPool)
+                                   {
+                                   }
+                            
                                 foreach (var it in temp2)
                                 {
                                     if (it.PublicationDate.Day != date.Day)
                                     {
-                                        break;
-                                        endread = true;
+                                        if (i != 1)
+                                        {
+                                            sitesvacancy.Clear();
+                                            endread = true;
+                                            break;
+                                        }
                                     }
                                     else
                                         temp.Add(it);
                                 }
-                                asingparse = new Task(delegate () { temp2 = Parsevac5(sitesvacancy, Vacancykey); });
-                                asingparse.Start();
-                                sitesvacancy.Clear();
-
+                                        temp2.Clear();
+                                if (endread != true)
+                                {
+                                        List<HtmlNode> tempsitevac = sitesvacancy.ToList();
+                                        asingparse = new Task(delegate () { temp2 = Parsevac5(tempsitevac, Vacancykey); });
+                                        asingparse.Start();
+                                        sitesvacancy.Clear();
+                                }
                             }
                         }
                 }
-                if (asingparse != null)
+
+
+
+                if (asingparse != null&&endread!=true)
                 {
                     while (temp2.Count != countMaxPool)
                     {
-
+                      
+                            
+                    
                     }
-                    foreach (var it in temp2)
+                    List<Vacancy> temp3 = temp2;
+                    foreach (var it in temp3)
                     {
                         if (it.PublicationDate.Day != date.Day)
                         {
-                            break;
                             endread = true;
+                            break;
                         }
                         else
                             temp.Add(it);
                     }
+                    temp2.Clear();
+                    asingparse = null;
 
                 }
                 if (sitesvacancy.Count != 0)
@@ -375,13 +406,17 @@ namespace ClassLibrary
                     asingparse.Start();
                     while (temp2.Count != sitesvacancy.Count)
                     {
+                       
                     }
                     foreach (var it in temp2)
                     {
                         if (it.PublicationDate.Day != date.Day)
                         {
-                            break;
-                            endread = true;
+                            if (i != 1)
+                            {
+                                break;
+                                endread = true;
+                            }
                         }
                         else
                             temp.Add(it);
@@ -398,15 +433,23 @@ namespace ClassLibrary
         private List<Vacancy> Parsevac5(List<HtmlNode> node, string Vacancy)
         {
             runningWorkers = countMaxPool;
+            bool run = false;
             List<Vacancy> listVac = new List<Vacancy>();
             for (int i = 0; i < node.Count; i++)
             {
+                run = true;
                 ThreadPool.QueueUserWorkItem(getVacancyfromPrimaryVacancy, new primaryVacancy(ref listVac, node[i], Vacancy));
             }
-                while (runningWorkers > 0)
-                {
-                    Monitor.Wait(threadlock);
-                }
+            if (run == true)
+            {
+               
+                    while (runningWorkers > 0)
+                    {
+                        
+                    }
+               
+            }
+           
             return listVac;
         }
         private void getVacancyfromPrimaryVacancy(object ev)
@@ -418,7 +461,6 @@ namespace ClassLibrary
             {
                 tempEV.vac.Add(vac);
                 runningWorkers--;
-                Monitor.Pulse(threadlock);
             }
         }
 
