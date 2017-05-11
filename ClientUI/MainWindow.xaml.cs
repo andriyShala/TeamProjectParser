@@ -17,6 +17,7 @@ using ClientUI.ServiceReference1;
 using MahApps;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
+using MaterialDesignThemes.Wpf;
 
 
 namespace ClientUI
@@ -56,9 +57,47 @@ namespace ClientUI
             }
             regionChooseCB.SelectedIndex = 0;
             dateBox.SelectedIndex = 0;
-            Vacancy vac = new Vacancy();
+            {
+                Vacancy vac = new Vacancy();
+                Button b = new Button();
+                Grid g = new Grid();
 
+                ColumnDefinition c1 = new ColumnDefinition();
+                c1.Width = GridLength.Auto;
+               
+                ColumnDefinition c2 = new ColumnDefinition();
+                c2.Width = GridLength.Auto;
 
+                RowDefinition r1 = new RowDefinition();
+                r1.Height = GridLength.Auto;
+                RowDefinition r2 = new RowDefinition();
+                r2.Height = GridLength.Auto;
+
+                g.ColumnDefinitions.Add(c1);
+                g.ColumnDefinitions.Add(c2);
+
+                g.RowDefinitions.Add(r1);
+                g.RowDefinitions.Add(r2);
+
+                Label t = new Label();
+                t.Content = "Test";
+                Label t1 = new Label();
+                t.Content = "Test1";
+
+                g.Children.Add(t);
+                g.Children.Add(t1);
+
+                Grid.SetColumn(t, 0);
+                Grid.SetRow(t, 0);
+
+                Grid.SetColumn(t1, 1);
+                Grid.SetRow(t1, 0);
+
+                b.Margin = new Thickness(10);
+                b.Height = 50;
+                b.Content = g;
+                
+            }
 
         }
 
