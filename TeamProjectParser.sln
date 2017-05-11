@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserService", "ParserService\ParserService.csproj", "{E65CA080-6754-43A4-87C2-2AE7F4B04094}"
 EndProject
@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "ClientUI\Client
 	ProjectSection(ProjectDependencies) = postProject
 		{E65CA080-6754-43A4-87C2-2AE7F4B04094} = {E65CA080-6754-43A4-87C2-2AE7F4B04094}
 	EndProjectSection
+<<<<<<< HEAD
+=======
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication2", "WindowsFormsApplication2\WindowsFormsApplication2.csproj", "{852A7F11-2E18-478C-BA9B-9DB9CCD1948C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E65CA080-6754-43A4-87C2-2AE7F4B04094} = {E65CA080-6754-43A4-87C2-2AE7F4B04094}
+	EndProjectSection
+>>>>>>> refs/remotes/origin/master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +38,10 @@ Global
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{852A7F11-2E18-478C-BA9B-9DB9CCD1948C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{852A7F11-2E18-478C-BA9B-9DB9CCD1948C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{852A7F11-2E18-478C-BA9B-9DB9CCD1948C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{852A7F11-2E18-478C-BA9B-9DB9CCD1948C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

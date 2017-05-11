@@ -20,5 +20,7 @@ namespace ParserService
         List<string> GetSites();
         [OperationContract]
         List<string> GetCategory();
+        [OperationContract]
+        List<string> GetCity();
     }
 }
