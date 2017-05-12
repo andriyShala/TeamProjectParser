@@ -14,7 +14,7 @@ namespace ParserService
     }
     public class ParseService : IParseService
     {
-        List<ClassLibrary.IParser> parseSites = new List<IParser>() { new ParseJobsUa(523)/*, new ParseRabotaUa(325), new ParserWorkUa(253) */};
+        List<ClassLibrary.IParser> parseSites = new List<IParser>() { new ParseJobsUa(523), new RabotaUAParser(325), /*new ParserWorkUa(253) */};
         DBmodel model = new DBmodel();
 
         public ParseService()
