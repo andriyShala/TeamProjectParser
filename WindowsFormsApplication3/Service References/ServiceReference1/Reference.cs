@@ -9,310 +9,23 @@
 //------------------------------------------------------------------------------
 
 namespace WindowsFormsApplication3.ServiceReference1 {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Vacancy", Namespace="http://schemas.datacontract.org/2004/07/ClassLibrary")]
-    [System.SerializableAttribute()]
-    public partial class Vacancy : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CompanyField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CompanyWebSiteField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ContactPersonField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string DescriptionField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string EducationField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ExperienceField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string LocationField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int ParseSiteIdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string PhoneNumberField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime PublicationDateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string SalaryField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TitleField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string TypeOfEmploymentField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string VacancyHrefField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int VacancyIdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string СategoryField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Company {
-            get {
-                return this.CompanyField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CompanyField, value) != true)) {
-                    this.CompanyField = value;
-                    this.RaisePropertyChanged("Company");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string CompanyWebSite {
-            get {
-                return this.CompanyWebSiteField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CompanyWebSiteField, value) != true)) {
-                    this.CompanyWebSiteField = value;
-                    this.RaisePropertyChanged("CompanyWebSite");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ContactPerson {
-            get {
-                return this.ContactPersonField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ContactPersonField, value) != true)) {
-                    this.ContactPersonField = value;
-                    this.RaisePropertyChanged("ContactPerson");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Description {
-            get {
-                return this.DescriptionField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DescriptionField, value) != true)) {
-                    this.DescriptionField = value;
-                    this.RaisePropertyChanged("Description");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Education {
-            get {
-                return this.EducationField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.EducationField, value) != true)) {
-                    this.EducationField = value;
-                    this.RaisePropertyChanged("Education");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Experience {
-            get {
-                return this.ExperienceField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ExperienceField, value) != true)) {
-                    this.ExperienceField = value;
-                    this.RaisePropertyChanged("Experience");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Location {
-            get {
-                return this.LocationField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.LocationField, value) != true)) {
-                    this.LocationField = value;
-                    this.RaisePropertyChanged("Location");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int ParseSiteId {
-            get {
-                return this.ParseSiteIdField;
-            }
-            set {
-                if ((this.ParseSiteIdField.Equals(value) != true)) {
-                    this.ParseSiteIdField = value;
-                    this.RaisePropertyChanged("ParseSiteId");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string PhoneNumber {
-            get {
-                return this.PhoneNumberField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.PhoneNumberField, value) != true)) {
-                    this.PhoneNumberField = value;
-                    this.RaisePropertyChanged("PhoneNumber");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime PublicationDate {
-            get {
-                return this.PublicationDateField;
-            }
-            set {
-                if ((this.PublicationDateField.Equals(value) != true)) {
-                    this.PublicationDateField = value;
-                    this.RaisePropertyChanged("PublicationDate");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Salary {
-            get {
-                return this.SalaryField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.SalaryField, value) != true)) {
-                    this.SalaryField = value;
-                    this.RaisePropertyChanged("Salary");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Title {
-            get {
-                return this.TitleField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TitleField, value) != true)) {
-                    this.TitleField = value;
-                    this.RaisePropertyChanged("Title");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string TypeOfEmployment {
-            get {
-                return this.TypeOfEmploymentField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.TypeOfEmploymentField, value) != true)) {
-                    this.TypeOfEmploymentField = value;
-                    this.RaisePropertyChanged("TypeOfEmployment");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string VacancyHref {
-            get {
-                return this.VacancyHrefField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.VacancyHrefField, value) != true)) {
-                    this.VacancyHrefField = value;
-                    this.RaisePropertyChanged("VacancyHref");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int VacancyId {
-            get {
-                return this.VacancyIdField;
-            }
-            set {
-                if ((this.VacancyIdField.Equals(value) != true)) {
-                    this.VacancyIdField = value;
-                    this.RaisePropertyChanged("VacancyId");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Сategory {
-            get {
-                return this.СategoryField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.СategoryField, value) != true)) {
-                    this.СategoryField = value;
-                    this.RaisePropertyChanged("Сategory");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference1.IParseService")]
     public interface IParseService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacancies", ReplyAction="http://tempuri.org/IParseService/GetVacanciesResponse")]
-        WindowsFormsApplication3.ServiceReference1.Vacancy[] GetVacancies(string Category, string City, string Site, int Day);
+        ClassLibrary.Vacancy[] GetVacancies(string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacancies", ReplyAction="http://tempuri.org/IParseService/GetVacanciesResponse")]
-        System.Threading.Tasks.Task<WindowsFormsApplication3.ServiceReference1.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day);
+        System.Threading.Tasks.Task<ClassLibrary.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacanciesBySearch", ReplyAction="http://tempuri.org/IParseService/GetVacanciesBySearchResponse")]
-        WindowsFormsApplication3.ServiceReference1.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day);
+        ClassLibrary.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetVacanciesBySearch", ReplyAction="http://tempuri.org/IParseService/GetVacanciesBySearchResponse")]
-        System.Threading.Tasks.Task<WindowsFormsApplication3.ServiceReference1.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day);
+        System.Threading.Tasks.Task<ClassLibrary.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IParseService/GetSites", ReplyAction="http://tempuri.org/IParseService/GetSitesResponse")]
         string[] GetSites();
@@ -366,19 +79,19 @@ namespace WindowsFormsApplication3.ServiceReference1 {
                 base(binding, remoteAddress) {
         }
         
-        public WindowsFormsApplication3.ServiceReference1.Vacancy[] GetVacancies(string Category, string City, string Site, int Day) {
+        public ClassLibrary.Vacancy[] GetVacancies(string Category, string City, string Site, int Day) {
             return base.Channel.GetVacancies(Category, City, Site, Day);
         }
         
-        public System.Threading.Tasks.Task<WindowsFormsApplication3.ServiceReference1.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day) {
+        public System.Threading.Tasks.Task<ClassLibrary.Vacancy[]> GetVacanciesAsync(string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesAsync(Category, City, Site, Day);
         }
         
-        public WindowsFormsApplication3.ServiceReference1.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day) {
+        public ClassLibrary.Vacancy[] GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesBySearch(NameVacancy, Category, City, Site, Day);
         }
         
-        public System.Threading.Tasks.Task<WindowsFormsApplication3.ServiceReference1.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day) {
+        public System.Threading.Tasks.Task<ClassLibrary.Vacancy[]> GetVacanciesBySearchAsync(string NameVacancy, string Category, string City, string Site, int Day) {
             return base.Channel.GetVacanciesBySearchAsync(NameVacancy, Category, City, Site, Day);
         }
         
