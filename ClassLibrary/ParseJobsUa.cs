@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-using System.Threading;
 namespace ClassLibrary
 {
-    public class ParseJobsUa : IParser
+    public class ParseJobsUa : Parser
     {
         private class primaryVacancy
         {
@@ -28,7 +26,7 @@ namespace ClassLibrary
         private Dictionary<string, string> category;
         private int siteId;
 
-        string IParser.SiteName
+        public override string SiteName
         {
             get
             {
@@ -233,7 +231,7 @@ namespace ClassLibrary
             }
         }
 
-        public IEnumerable<Vacancy> ParseByCategory(string keyCategory)
+        public override IEnumerable<Vacancy> ParseByCategory(string keyCategory)
         {
             string valuecategory = null;
             try
@@ -268,7 +266,7 @@ namespace ClassLibrary
             }
             return temp;
         }
-        public IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
+        public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             string valuecategory = null;
             try

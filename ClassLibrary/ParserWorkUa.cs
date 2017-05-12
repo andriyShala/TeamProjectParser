@@ -6,49 +6,29 @@ using System.Threading.Tasks;
 using ClassLibrary;
 namespace ClassLibrary
 {
-    public class ParserWorkUa : IParser
+    public class ParserWorkUa : Parser
     {
         public static Vacancy GetVacancy { get; set; }
-        public const string SiteName = "Work.ua";
+
+        public override string SiteName
+        {
+            get
+            {
+                return "Work.ua";
+            }
+        }
+
         public ParserWorkUa(int id)
         {
 
         }
 
-        string IParser.SiteName
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public List<Vacancy> ParseByCategory(string keyCategory)
+        public override IEnumerable<Vacancy> ParseByCategory(string keyCategory)
         {
             throw new NotImplementedException();
         }
 
-        public List<Vacancy> ParseByDate(string keyCategory, DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Vacancy> StartParseAll(string keyCategory)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Vacancy> StartParseforDate(string keyCategory, DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<Vacancy> IParser.ParseByCategory(string keyCategory)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<Vacancy> IParser.ParseByDate(string keyCategory, DateTime date)
+        public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             throw new NotImplementedException();
         }

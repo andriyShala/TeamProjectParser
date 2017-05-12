@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Category.cs" />
-    <Compile Include="iParser.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="ParseJobsUa.cs" />
     <Compile Include="ParseRabotaUa.cs" />
     <Compile Include="ParserWorkUa.cs" />

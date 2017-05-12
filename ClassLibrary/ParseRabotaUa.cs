@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ClassLibrary
 {
-    public class RabotaUAParser : IParser
+    public class RabotaUAParser : Parser
     {
         const string webSite = "https://rabota.ua/";
         Dictionary<string, string> category;
@@ -13,7 +13,7 @@ namespace ClassLibrary
         string dayAgo;
         int webSiteId;
 
-        public string SiteName
+        public override string SiteName
         {
             get
             {
@@ -308,7 +308,7 @@ namespace ClassLibrary
            vacancy.Description=vacancy.Description.Replace("&nbsp;", " "); 
         }
 
-        public IEnumerable<Vacancy> ParseByCategory(string category)
+        public override IEnumerable<Vacancy> ParseByCategory(string category)
         {
             var item = this.category.Where(x => x.Key == category && x.Value != string.Empty).FirstOrDefault();
 
@@ -331,7 +331,7 @@ namespace ClassLibrary
                 }
             }
         }
-        public IEnumerable<Vacancy> ParseByDate(string category, DateTime date)
+        public override IEnumerable<Vacancy> ParseByDate(string category, DateTime date)
         {
             var item = this.category.Where(x => x.Key == category && x.Value != string.Empty).FirstOrDefault();
 

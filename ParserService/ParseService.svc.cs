@@ -15,7 +15,7 @@ namespace ParserService
     public class ParseService : IParseService
     {
         private const int Timeout = 3600000;
-        List<ClassLibrary.IParser> parseSites = new List<IParser>() { new ParseJobsUa(523),new RabotaUAParser(325) };
+        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523), new RabotaUAParser(325) };
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -31,7 +31,7 @@ namespace ParserService
             }
             
         }
-        private void UpdateDateSite(IParser site)
+        private void UpdateDateSite(Parser site)
         {
             Category tempvac = new Category();
             foreach (var vac in tempvac.categoryCollection)
@@ -57,7 +57,7 @@ namespace ParserService
                         }
                     }
                 }
-                catch (Exception exe)
+                catch
                 {
                 }
             }
