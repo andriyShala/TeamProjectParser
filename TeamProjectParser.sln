@@ -12,11 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "ClientUI\Client
 		{E65CA080-6754-43A4-87C2-2AE7F4B04094} = {E65CA080-6754-43A4-87C2-2AE7F4B04094}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication3", "WindowsFormsApplication3\WindowsFormsApplication3.csproj", "{525D9D1C-8858-4ED1-8B3D-48702DB04DF7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E65CA080-6754-43A4-87C2-2AE7F4B04094} = {E65CA080-6754-43A4-87C2-2AE7F4B04094}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +30,6 @@ Global
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00847376-2429-420C-9871-3E1C7A38FB28}.Release|Any CPU.Build.0 = Release|Any CPU
-		{525D9D1C-8858-4ED1-8B3D-48702DB04DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{525D9D1C-8858-4ED1-8B3D-48702DB04DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{525D9D1C-8858-4ED1-8B3D-48702DB04DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{525D9D1C-8858-4ED1-8B3D-48702DB04DF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

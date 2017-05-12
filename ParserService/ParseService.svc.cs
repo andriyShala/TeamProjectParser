@@ -10,48 +10,54 @@ namespace ParserService
     public static class temp
     {
         public static object lockthread = new object();
-        public static int id = 0;
+        public static int id = 3151;
     }
     public class ParseService : IParseService
     {
-        List<ClassLibrary.IParser> parseSites = new List<IParser>() { /*new ParseJobsUa(523)*/new RabotaUAParser(325), /*new ParserWorkUa(253) */};
+        private const int Timeout = 3600000;
+        List<ClassLibrary.IParser> parseSites = new List<IParser>() { new ParseJobsUa(523),new RabotaUAParser(325) };
         DBmodel model = new DBmodel();
+        private static object lockthread = new object();
 
         public ParseService()
         {
             if (model.Sites.Count() == 0)
             {
-                model.Sites.Add(new Site() { id = 523, name = "Jobs.ua" });
-                model.Sites.Add(new Site() { id = 325, name = "Rabota.ua" });
-                model.Sites.Add(new Site() { id = 253, name = "Work.ua" });
+                foreach (var site in parseSites)
+                {
+                    model.Sites.Add(new Site() { id = temp.id++, name = site.SiteName });
+                }
                 model.SaveChanges();
             }
-           
+            
         }
-    
         private void UpdateDateSite(IParser site)
         {
-            ClassLibrary.Category tempvac = new ClassLibrary.Category();
-
+            Category tempvac = new Category();
             foreach (var vac in tempvac.categoryCollection)
             {
                 try
                 {
-                    List<ClassLibrary.Vacancy> tempvacancies = site.ParseByDate(vac.Key, DateTime.Today);
-                    foreach (var items in tempvacancies)
+                    foreach (var items in site.ParseByDate(vac, DateTime.Today))
                     {
                         try
                         {
-                            model.Vacancies.Add(items);
-                            model.SaveChanges();
+                            lock (lockthread)
+                            {
+                                model.Vacancies.Add(items);
+                                model.SaveChanges();
+                            }
                         }
                         catch
                         {
-                            model.Vacancies.Remove(items);
+                            lock (lockthread)
+                            {
+                                model.Vacancies.Remove(items);
+                            }
                         }
                     }
                 }
-                catch
+                catch (Exception exe)
                 {
                 }
             }
@@ -60,18 +66,11 @@ namespace ParserService
         {
             while (true)
             {
-                try
+                foreach (var item in parseSites)
                 {
-                    foreach (var item in parseSites)
-                    {
-                        Task.Run(() => UpdateDateSite(item));
-                    }
+                    Task.Run(() => UpdateDateSite(item));
                 }
-                catch
-                {
-
-                }
-                Thread.Sleep(600000);
+                Thread.Sleep(Timeout);
             }
         }
         public List<string> GetCategory()
@@ -80,7 +79,7 @@ namespace ParserService
             ClassLibrary.Category tempvac = new ClassLibrary.Category();
             foreach (var item in tempvac.categoryCollection)
             {
-                categories.Add(item.Key);
+                categories.Add(item);
             }
             return categories;
         }
