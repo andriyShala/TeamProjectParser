@@ -70,14 +70,14 @@ namespace ClassLibrary
             return 0;
         }
 
-        public void ParseVacancyPage(string caregory, int pageNumber, ref List<Vacancy> list, DateTime dateTime)
+        public void ParseVacancyPage(KeyValuePair<string,string> caregory, int pageNumber, ref List<Vacancy> list, DateTime dateTime)
         {
-            var vacancyCollection = new HtmlWeb().Load(caregory + "/pg" + pageNumber).DocumentNode.Descendants("table").Where(x => x.Attributes["class"].Value == "f-vacancylist-tablewrap").FirstOrDefault().ChildNodes;
+            var vacancyCollection = new HtmlWeb().Load(caregory.Value + "/pg" + pageNumber).DocumentNode.Descendants("table").Where(x => x.Attributes["class"].Value == "f-vacancylist-tablewrap").FirstOrDefault().ChildNodes;
             foreach (var itemNode in vacancyCollection)
             {
                 if (itemNode != vacancyCollection[vacancyCollection.Count - 1])
                 {
-                    ParseVacancyHeader(new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId }, itemNode, ref list, dateTime);
+                    ParseVacancyHeader(new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId,Сategory=caregory.Key }, itemNode, ref list, dateTime);
                 }
             }
         }
@@ -308,7 +308,7 @@ namespace ClassLibrary
             }
         }
 
-        public List<Vacancy> StartParseAll(string keyCategory)
+        public List<Vacancy> ParseByCategory(string keyCategory)
         {
             var item = rubric.Where(x => x.Key == keyCategory && x.Value != string.Empty).FirstOrDefault();
 
@@ -319,7 +319,7 @@ namespace ClassLibrary
 
                 for (int i = 1; i <= numberOfPages; i++)
                 {
-                    ParseVacancyPage(item.Value, i, ref temp, new DateTime());
+                    ParseVacancyPage(item, i, ref temp, new DateTime());
                 }
                 return temp;
             }
@@ -327,7 +327,7 @@ namespace ClassLibrary
             return null;
         }
 
-        public List<Vacancy> StartParseforDate(string keyCategory, DateTime date)
+        public List<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             var item = rubric.Where(x => x.Key == keyCategory && x.Value != string.Empty).FirstOrDefault();
             if (item.Value != null)
@@ -344,7 +344,7 @@ namespace ClassLibrary
                     }
                     if (!checkDate)
                     {
-                        ParseVacancyPage(item.Value, i, ref temp, date);
+                        ParseVacancyPage(item, i, ref temp, date);
                     }
                     else
                     {

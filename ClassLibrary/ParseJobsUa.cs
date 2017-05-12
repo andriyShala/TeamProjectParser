@@ -464,12 +464,12 @@ namespace ClassLibrary
             }
         }
 
-        public List<Vacancy> StartParseAll(string keyCategory)
+        public List<Vacancy> ParseByCategory(string keyCategory)
         {
             return ParseVacancy(keyCategory);
         }
 
-        public List<Vacancy> StartParseforDate(string keyCategory, DateTime date)
+        public List<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             return ParseDayVacancy(date, keyCategory);
         }

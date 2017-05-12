@@ -12,6 +12,17 @@ namespace ClassLibrary
         {
 
         }
+
+        public List<Vacancy> ParseByCategory(string keyCategory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Vacancy> ParseByDate(string keyCategory, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Vacancy> StartParseAll(string keyCategory)
         {
             throw new NotImplementedException();

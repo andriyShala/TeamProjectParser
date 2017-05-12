@@ -14,7 +14,7 @@ namespace ParserService
     }
     public class ParseService : IParseService
     {
-        List<ClassLibrary.IParser> parseSites = new List<IParser>() { new ParseJobsUa(523), new RabotaUAParser(325), /*new ParserWorkUa(253) */};
+        List<ClassLibrary.IParser> parseSites = new List<IParser>() { /*new ParseJobsUa(523)*/new RabotaUAParser(325), /*new ParserWorkUa(253) */};
         DBmodel model = new DBmodel();
 
         public ParseService()
@@ -26,39 +26,37 @@ namespace ParserService
                 model.Sites.Add(new Site() { id = 253, name = "Work.ua" });
                 model.SaveChanges();
             }
+           
         }
-              private void renewalDateSite(IParser site)
+    
+        private void UpdateDateSite(IParser site)
         {
             ClassLibrary.Category tempvac = new ClassLibrary.Category();
-            try
+
+            foreach (var vac in tempvac.categoryCollection)
             {
-                foreach (var vac in tempvac.categoryCollection)
+                try
                 {
-                    try
+                    List<ClassLibrary.Vacancy> tempvacancies = site.ParseByDate(vac.Key, DateTime.Today);
+                    foreach (var items in tempvacancies)
                     {
-                        List<ClassLibrary.Vacancy> tempvacancies = site.StartParseforDate(vac.Key, DateTime.Now);
-                        foreach (var items in tempvacancies)
+                        try
                         {
-                            try
-                            {
-                                model.Vacancies.Add(items);
-                                model.SaveChanges();
-                            }
-                            catch
-                            {
-                            }
+                            model.Vacancies.Add(items);
+                            model.SaveChanges();
+                        }
+                        catch
+                        {
+                            model.Vacancies.Remove(items);
                         }
                     }
-                    catch
-                    {
-                    }
+                }
+                catch
+                {
                 }
             }
-            catch
-            {
-            }
         }
-        private void renewalDate()
+        private void UpdateDate()
         {
             while (true)
             {
@@ -66,14 +64,14 @@ namespace ParserService
                 {
                     foreach (var item in parseSites)
                     {
-                        Task.Run(() => renewalDateSite(item));
+                        Task.Run(() => UpdateDateSite(item));
                     }
                 }
                 catch
                 {
 
                 }
-                Thread.Sleep(300000);
+                Thread.Sleep(600000);
             }
         }
         public List<string> GetCategory()
@@ -119,22 +117,22 @@ namespace ParserService
             }
             return rangedata;
         }
-        public List<Vacancy> GetVacancies(string Category, string City, string Site,int Day)
+        public List<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
-         
-            if(Category!=null&&City==null&&Site==null)
+
+            if (Category != null && City == null && Site == null)
             {
                 try
                 {
                     if (rangedata == new DateTime())
                         return model.Vacancies.Where(x => x.Сategory == Category).ToList();
                     else
-                        return model.Vacancies.Where(x => x.Сategory == Category&&x.PublicationDate>=rangedata).ToList();
+                        return model.Vacancies.Where(x => x.Сategory == Category && x.PublicationDate >= rangedata).ToList();
                 }
                 catch
                 {
-                   return new List<Vacancy>();
+                    return new List<Vacancy>();
                 }
             }
             else if (Category == null && City != null && Site == null)
@@ -144,7 +142,7 @@ namespace ParserService
                     if (rangedata == new DateTime())
                         return model.Vacancies.Where(x => x.Location == City).ToList();
                     else
-                        return model.Vacancies.Where(x => x.Location == City&&x.PublicationDate>=rangedata).ToList();
+                        return model.Vacancies.Where(x => x.Location == City && x.PublicationDate >= rangedata).ToList();
 
                 }
                 catch
@@ -160,7 +158,7 @@ namespace ParserService
                     if (rangedata == new DateTime())
                         return model.Vacancies.Where(x => x.ParseSiteId == site.id).ToList();
                     else
-                        return model.Vacancies.Where(x => x.ParseSiteId == site.id&& x.PublicationDate >= rangedata).ToList();
+                        return model.Vacancies.Where(x => x.ParseSiteId == site.id && x.PublicationDate >= rangedata).ToList();
 
                 }
                 catch
@@ -222,7 +220,7 @@ namespace ParserService
                 {
                     var site = model.Sites.Where(x => x.name == Site).FirstOrDefault();
                     if (rangedata == new DateTime())
-                        return model.Vacancies.Where(x => x.Сategory == Category && x.ParseSiteId == site.id&&x.Location==City).ToList();
+                        return model.Vacancies.Where(x => x.Сategory == Category && x.ParseSiteId == site.id && x.Location == City).ToList();
                     else
                         return model.Vacancies.Where(x => x.Сategory == Category && x.ParseSiteId == site.id && x.Location == City && x.PublicationDate >= rangedata).ToList();
 
@@ -234,12 +232,12 @@ namespace ParserService
             }
             else
             {
-               return new List<Vacancy>();
+                return new List<Vacancy>();
             }
 
         }
 
-        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site,int Day)
+        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -361,10 +359,10 @@ namespace ParserService
                     if (rangedata == new DateTime())
                         return model.Vacancies.Where(x => x.Title.Contains(NameVacancy)).ToList();
                     else
-                        return model.Vacancies.Where(x => x.Title.Contains(NameVacancy)&&x.PublicationDate>=rangedata).ToList();
+                        return model.Vacancies.Where(x => x.Title.Contains(NameVacancy) && x.PublicationDate >= rangedata).ToList();
 
                 }
-                catch 
+                catch
                 {
                     return new List<Vacancy>();
                 }
@@ -376,11 +374,16 @@ namespace ParserService
         public List<string> GetCity()
         {
             List<string> City = new List<string>();
-            foreach (var item in model.Vacancies.GroupBy(x=>x.Location))
+            foreach (var item in model.Vacancies.GroupBy(x => x.Location))
             {
                 City.Add(item.Key);
             }
             return City;
+        }
+
+        public void Start()
+        {
+            UpdateDate();
         }
     }
 }
