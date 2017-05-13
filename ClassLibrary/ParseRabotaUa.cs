@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ClassLibrary
 {
-    public class RabotaUAParser : IParser
+    public class RabotaUAParser : Parser
     {
         const string webSite = "https://rabota.ua/";
         Dictionary<string, string> category;
@@ -13,7 +13,7 @@ namespace ClassLibrary
         string dayAgo;
         int webSiteId;
 
-        public string SiteName
+        public override string SiteName
         {
             get
             {
@@ -89,7 +89,7 @@ namespace ClassLibrary
                 if (vacancy.PublicationDate < date)
                 {
                     checkDate = true;
-                    return null;
+                    return vacancy = null;
                 }
             }
 
@@ -284,31 +284,34 @@ namespace ClassLibrary
 
         public void ParseVacancyDescription(HtmlNode node, ref Vacancy vacancy)
         {
-            foreach (var itemNode in node.ChildNodes)
+            try
             {
-                if (itemNode.NodeType == HtmlNodeType.Element && (itemNode.Name == "p" || itemNode.Name == "ul"))
+                foreach (var itemNode in node.ChildNodes)
                 {
-                    if (itemNode.InnerText == "&nbsp;")
+                    if (itemNode.NodeType == HtmlNodeType.Element && (itemNode.Name == "p" || itemNode.Name == "ul"))
                     {
-                        continue;
-                    }
-                    if (itemNode.Name == "ul")
-                    {
-                        foreach (var childNode in itemNode.ChildNodes)
+                        if (itemNode.InnerText == "&nbsp;")
                         {
-                            vacancy.Description += childNode.InnerText + Environment.NewLine;
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                        if (itemNode.Name == "ul")
+                        {
+                            foreach (var childNode in itemNode.ChildNodes)
+                            {
+                                vacancy.Description += childNode.InnerText + Environment.NewLine;
+                            }
+                        }
+                        else
+                        {
+                            vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                        }
                     }
                 }
             }
-           vacancy.Description=vacancy.Description.Replace("&nbsp;", " "); 
+            catch { } 
         }
 
-        public IEnumerable<Vacancy> ParseByCategory(string category)
+        public override IEnumerable<Vacancy> ParseByCategory(string category)
         {
             var item = this.category.Where(x => x.Key == category && x.Value != string.Empty).FirstOrDefault();
 
@@ -331,7 +334,7 @@ namespace ClassLibrary
                 }
             }
         }
-        public IEnumerable<Vacancy> ParseByDate(string category, DateTime date)
+        public override IEnumerable<Vacancy> ParseByDate(string category, DateTime date)
         {
             var item = this.category.Where(x => x.Key == category && x.Value != string.Empty).FirstOrDefault();
 
@@ -355,7 +358,10 @@ namespace ClassLibrary
                             {
                                 Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
                                 ParseVacancyHeader(itemNode, ref vacancy, date);
-                                yield return vacancy;
+                                if (vacancy != null)
+                                {
+                                    yield return vacancy;
+                                }
                             }
                             else
                             {
