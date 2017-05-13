@@ -76,7 +76,7 @@ namespace ParserService
         public List<string> GetCategory()
         {
             List<string> categories = new List<string>();
-            ClassLibrary.Category tempvac = new ClassLibrary.Category();
+            Category tempvac = new Category();
             foreach (var item in tempvac.categoryCollection)
             {
                 categories.Add(item);

@@ -89,7 +89,7 @@ namespace ClassLibrary
                 if (vacancy.PublicationDate < date)
                 {
                     checkDate = true;
-                    return null;
+                    return vacancy = null;
                 }
             }
 
@@ -284,28 +284,31 @@ namespace ClassLibrary
 
         public void ParseVacancyDescription(HtmlNode node, ref Vacancy vacancy)
         {
-            foreach (var itemNode in node.ChildNodes)
+            try
             {
-                if (itemNode.NodeType == HtmlNodeType.Element && (itemNode.Name == "p" || itemNode.Name == "ul"))
+                foreach (var itemNode in node.ChildNodes)
                 {
-                    if (itemNode.InnerText == "&nbsp;")
+                    if (itemNode.NodeType == HtmlNodeType.Element && (itemNode.Name == "p" || itemNode.Name == "ul"))
                     {
-                        continue;
-                    }
-                    if (itemNode.Name == "ul")
-                    {
-                        foreach (var childNode in itemNode.ChildNodes)
+                        if (itemNode.InnerText == "&nbsp;")
                         {
-                            vacancy.Description += childNode.InnerText + Environment.NewLine;
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                        if (itemNode.Name == "ul")
+                        {
+                            foreach (var childNode in itemNode.ChildNodes)
+                            {
+                                vacancy.Description += childNode.InnerText + Environment.NewLine;
+                            }
+                        }
+                        else
+                        {
+                            vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                        }
                     }
                 }
             }
-           vacancy.Description=vacancy.Description.Replace("&nbsp;", " "); 
+            catch { } 
         }
 
         public override IEnumerable<Vacancy> ParseByCategory(string category)
@@ -355,7 +358,10 @@ namespace ClassLibrary
                             {
                                 Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
                                 ParseVacancyHeader(itemNode, ref vacancy, date);
-                                yield return vacancy;
+                                if (vacancy != null)
+                                {
+                                    yield return vacancy;
+                                }
                             }
                             else
                             {
