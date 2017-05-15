@@ -19,8 +19,8 @@ namespace ParserService
   )]
     public class ParseService : IParseService
     {
-        private const int Timeout = 3600000;
-        List<Parser> parseSites = new List<Parser>() {new ParseJobsUa(523), new RabotaUAParser(325) };
+        private const int Timeout = 10800000;
+        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523),new RabotaUAParser(325) };
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -34,9 +34,43 @@ namespace ParserService
                 }
                 model.SaveChanges();
             }
-            
+            Task.Run(() => UpdateDate());
         }
+        private void UpdateSite(Parser site)
+        {
 
+            foreach (var vac in Category.categoryCollection)
+            {
+
+                try
+                {
+                    foreach (var items in site.ParseByCategory(vac))
+                    {
+                        try
+                        {
+                            lock (lockthread)
+                            {
+                                model.Vacancies.Add(items);
+                                model.SaveChanges();
+                            }
+                        }
+                        catch 
+                        {
+                            lock (lockthread)
+                            {
+                                model.Vacancies.Remove(items);
+                                model.SaveChanges();
+                            }
+
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+        }
         private void UpdateDateSite(Parser site)
         {
           
@@ -55,7 +89,7 @@ namespace ParserService
                                 model.SaveChanges();
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             lock (lockthread)
                             {
@@ -78,7 +112,7 @@ namespace ParserService
             {
                 foreach (var item in parseSites)
                 {
-                    Task.Run(() => UpdateDateSite(item));
+                    Task.Run(()=>UpdateDateSite(item));
                 }
                 Thread.Sleep(Timeout);
             }
@@ -389,10 +423,16 @@ namespace ParserService
             }
             return City;
         }
-
+        private void UpdateAll()
+        {
+            foreach (var item in parseSites)
+            {
+                Task.Run(() => UpdateSite(item));
+            }
+        }
         public void Start()
         {
-           Task.Run( ()=>UpdateDate());
+            Task.Run(() => UpdateAll());
         }
 
         public IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
