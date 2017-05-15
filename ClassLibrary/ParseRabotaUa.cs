@@ -151,6 +151,10 @@ namespace ClassLibrary
             {
                 dayAgo = node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault().FirstChild.InnerText;
             }
+            else
+            {
+                dayAgo = null;
+            }
             foreach (var itemNode in items)
             {
                 if (itemNode.NodeType == HtmlNodeType.Element)
@@ -362,15 +366,20 @@ namespace ClassLibrary
                                 {
                                     yield return vacancy;
                                 }
+                                else
+                                {
+                                    continue;
+                                }
                             }
                             else
                             {
-                                break;
+                                yield break;
                             }
                         }
                     }
                 }
             }
+            yield break;
         }
     }
 }

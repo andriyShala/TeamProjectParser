@@ -1,0 +1,2 @@
+Violation of PRIMARY KEY constraint 'PK_dbo.Vacancies'. Cannot insert duplicate key in object 'dbo.Vacancies'. The duplicate key value is (6540786, 325).
+The statement has been terminated.
