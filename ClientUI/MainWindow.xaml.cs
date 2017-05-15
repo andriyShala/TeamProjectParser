@@ -34,69 +34,50 @@ namespace ClientUI
         {
             InitializeComponent();
             client = new ParseServiceClient();
-            var sites = client.GetSites();
-            foreach (var item in sites)
-            {
-                siteChooseCB.Items.Add(item);
-            }
+            //var sites = client.GetSites();
+            //foreach (var item in sites)
+            //{
+            //    siteChooseCB.Items.Add(item);
+            //}
           
-            siteChooseCB.SelectedIndex = 0;
-            var category = client.GetCategory();
-            categoryChooseCB.Items.Add("All");
-            foreach (var item in category)
-            {
-                categoryChooseCB.Items.Add(item);
-            }
+            //siteChooseCB.SelectedIndex = 0;
+            //var category = client.GetCategory();
+            //categoryChooseCB.Items.Add("All");
+            //foreach (var item in category)
+            //{
+            //    categoryChooseCB.Items.Add(item);
+            //}
            
-            categoryChooseCB.SelectedIndex = 0;
-            var cities = client.GetCity();
-            regionChooseCB.Items.Add("All");
-            foreach (var item in cities)
+            //categoryChooseCB.SelectedIndex = 0;
+            //var cities = client.GetCity();
+            //regionChooseCB.Items.Add("All");
+            //foreach (var item in cities)
+            //{
+            //    regionChooseCB.Items.Add(item);
+            //}
+            //regionChooseCB.SelectedIndex = 0;
+            //dateBox.SelectedIndex = 0;
             {
-                regionChooseCB.Items.Add(item);
-            }
-            regionChooseCB.SelectedIndex = 0;
-            dateBox.SelectedIndex = 0;
-            {
-                Vacancy vac = new Vacancy();
-                Button b = new Button();
-                Grid g = new Grid();
+                ServiceReference1.Vacancy vac = new ServiceReference1.Vacancy();
+                List<ServiceReference1.Vacancy> list = new List<ServiceReference1.Vacancy>();
+                vac.Title = "Тренер по продажам / Гуру телефонных продаж";
+                vac.Company = "Смарт Системс Девелопмент";
+                vac.Сategory = "HR";
+                vac.Location = "Львов";
+                vac.ContactPerson = "Александр Матвийчук";
+                vac.PhoneNumber = "380931371777";
+                vac.Description =
+                    "Компания Smart System Development ищет БОГА продаж, который продаст даже скрипт нашим менеджерам!";
+                vac.Salary = "20 000 грн";
+                vac.Experience = "Наявність досвіду роботи із документами та конфіденційною інформацією буде перевагою";
+              
+                vac.VacancyHref = "https://rabota.ua/company3221854/vacancy6708659";
+                vac.CompanyWebSite = "https://rabota.ua/company3221854#3221854";
+                vac.PublicationDate = DateTime.Now;
 
-                ColumnDefinition c1 = new ColumnDefinition();
-                c1.Width = GridLength.Auto;
-               
-                ColumnDefinition c2 = new ColumnDefinition();
-                c2.Width = GridLength.Auto;
+                list.Add(vac);
+                vacListView.ItemsSource = list;
 
-                RowDefinition r1 = new RowDefinition();
-                r1.Height = GridLength.Auto;
-                RowDefinition r2 = new RowDefinition();
-                r2.Height = GridLength.Auto;
-
-                g.ColumnDefinitions.Add(c1);
-                g.ColumnDefinitions.Add(c2);
-
-                g.RowDefinitions.Add(r1);
-                g.RowDefinitions.Add(r2);
-
-                Label t = new Label();
-                t.Content = "Test";
-                Label t1 = new Label();
-                t.Content = "Test1";
-
-                g.Children.Add(t);
-                g.Children.Add(t1);
-
-                Grid.SetColumn(t, 0);
-                Grid.SetRow(t, 0);
-
-                Grid.SetColumn(t1, 1);
-                Grid.SetRow(t1, 0);
-
-                b.Margin = new Thickness(10);
-                b.Height = 50;
-                b.Content = g;
-                
             }
 
         }
@@ -105,80 +86,55 @@ namespace ClientUI
 
         private void SearchBut_OnClick(object sender, RoutedEventArgs e)
         {
-            vacanciesListBox.Items.Clear();
-            string cat = null;
-            if (categoryChooseCB.Text != "All")
-                cat = categoryChooseCB.Text;
+            //vacanciesListBox.Items.Clear();
+            //string cat = null;
+            //if (categoryChooseCB.Text != "All")
+            //    cat = categoryChooseCB.Text;
 
-            string city = null;
-            if (regionChooseCB.SelectedItem.ToString() != "All")
-                city = regionChooseCB.Text;
+            //string city = null;
+            //if (regionChooseCB.SelectedItem.ToString() != "All")
+            //    city = regionChooseCB.Text;
 
 
-            if (String.IsNullOrEmpty(searchBox.Text))
-            {
+            //if (String.IsNullOrEmpty(searchBox.Text))
+            //{
 
-                vacancies = client.GetVacancies(cat, city, siteChooseCB.Text,
-                    Convert.ToInt32(dateBox.Text));
+            //    vacancies = client.GetVacancies(cat, city, siteChooseCB.Text,
+            //        Convert.ToInt32(dateBox.Text));
                 
-                foreach (var item in vacancies)
-                {
-                    ListBoxItem lb = new ListBoxItem();
-                    lb.Content = item.Title;
-                    lb.Tag = item;
-                    vacanciesListBox.Items.Add(lb);
-                }
-            }
-            else
-            {
-                vacancies = client.GetVacanciesBySearch(searchBox.Text, cat, city,
-                    siteChooseCB.Text, Convert.ToInt32(dateBox.Text));
-                foreach (var item in vacancies)
-                {
-                    vacanciesListBox.Items.Add(item);
-                }
-            }
+            //    foreach (var item in vacancies)
+            //    {
+            //        ListBoxItem lb = new ListBoxItem();
+            //        lb.Content = item.Title;
+            //        lb.Tag = item;
+            //        vacanciesListBox.Items.Add(lb);
+            //    }
+            //}
+            //else
+            //{
+            //    vacancies = client.GetVacanciesBySearch(searchBox.Text, cat, city,
+            //        siteChooseCB.Text, Convert.ToInt32(dateBox.Text));
+            //    foreach (var item in vacancies)
+            //    {
+            //        vacanciesListBox.Items.Add(item);
+            //    }
+            //}
         }
 
-        private void VacancyHrefB_OnClick(object sender, RoutedEventArgs e)
-        {
-            Process.Start(vacancyHrefB.NavigateUri.ToString());
-        }
+     
 
         private void VacanciesListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-
-                ServiceReference1.Vacancy vac =
-                    (vacanciesListBox.SelectedItems[0] as ListBoxItem).Tag as ServiceReference1.Vacancy;
-                titleB.Text = vac.Title;
-                categoryB.Text = vac.Сategory;
-                locationB.Text = vac.Location;
-                companyB.Text = vac.Company;
-                phoneNumberB.Text = vac.PhoneNumber;
-                contactPersonB.Text = vac.ContactPerson;
-                if (vac.CompanyWebSite != null)
-                    companyWebSiteB.NavigateUri = new Uri(vac.CompanyWebSite);
-                publicationDateB.Text = vac.PublicationDate.ToShortDateString();
-                experienceB.Text = vac.Experience;
-                educationB.Text = vac.Education;
-                salaryB.Text = vac.Salary;
-                descriptionB.Text = vac.Description;
-                if (vac.VacancyHref != null)
-                    vacancyHrefB.NavigateUri = new Uri(vac.VacancyHref);
-            }
-            catch (Exception)
-            {
-                
-                
-            }
+           
          
         }
 
-        private void CompanyWebSiteB_OnClick(object sender, RoutedEventArgs e)
+      
+
+        private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
         {
-            Process.Start(companyWebSiteB.NavigateUri.ToString());
+           InfoWindow info = new InfoWindow(vacListView.SelectedItem as ServiceReference1.Vacancy);
+           info.Show();
         }
     }
 }

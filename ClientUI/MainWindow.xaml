@@ -9,7 +9,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Vacantion Parser" Height="500" Width="700">
+        Title="Vacantion Parser" Height="500" Width="700" Icon="Img/search.png">
     <Grid>
         <TabControl>
             <TabItem Header="Search">
@@ -26,7 +26,7 @@
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
 
-                    <Expander Padding="5" Header="Search" Grid.Row="0" Grid.ColumnSpan="3">
+                    <Expander IsExpanded="True"  Padding="5" Header="Search" Grid.Row="0" Grid.ColumnSpan="3">
 
                         <Grid Margin="10,0,0,0">
                             <Grid.RowDefinitions>
@@ -74,121 +74,32 @@
 
                     </Expander>
 
-                    <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="3" Margin="-10,0,0,-27">
-                        <StackPanel x:Name="vacPanel">
-                            <Label x:Name="label" Content="Label" Width="132"/>
+                    <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="3">
+                        
+                        <ListView Margin="10" Name="vacListView">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Title" Width="150"  DisplayMemberBinding="{Binding Title}" />
+                                    <GridViewColumn Header="Company" Width="150"  DisplayMemberBinding="{Binding Company}" />
+                                    <GridViewColumn Header="Category" Width="100"  DisplayMemberBinding="{Binding Сategory}"/>
+                                    <GridViewColumn Header="Location" Width="100"  DisplayMemberBinding="{Binding Location}"/>
+                                    <GridViewColumn Header="Salary" Width="100"  DisplayMemberBinding="{Binding Salary}"/>
 
-                        </StackPanel>
-                       
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+
+
                     </ScrollViewer>
-                    <ListBox x:Name="listBoxVac" HorizontalAlignment="Left" Height="276" Margin="-10,39,0,-301" Grid.Row="1" VerticalAlignment="Top" Width="692" Grid.ColumnSpan="3"/>
+                   
                 </Grid>
             </TabItem>
-            <TabItem Header="Result">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80*"/>
-                        <ColumnDefinition Width="150*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <ListBox SelectionChanged="VacanciesListBox_OnSelectionChanged" Grid.Column="0" x:Name="vacanciesListBox"></ListBox>
-                    <ScrollViewer  Grid.Column="1">
-                        <StackPanel>
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Title:</Label>
-                                    <TextBlock  TextWrapping="Wrap"  Padding="2"   Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="titleB">Title</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Category:</Label>
-                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="categoryB">Сategory</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Location:</Label>
-                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="locationB">Location</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Company:</Label>
-                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="companyB">Company</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>PhoneNumber:</Label>
-                                    <TextBox IsReadOnly="True" TextWrapping="Wrap" Padding="2"  x:Name="phoneNumberB">PhoneNumber</TextBox>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>ContactPerson:</Label>
-                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="contactPersonB">ContactPerson</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>CompanyWebSite:</Label>
-                                    <TextBlock   TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}">   <Hyperlink Foreground="Indigo" Click="CompanyWebSiteB_OnClick"  x:Name="companyWebSiteB" NavigateUri="http://stackoverflow.com"> link </Hyperlink></TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>PublicationDate:</Label>
-                                    <TextBlock TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="publicationDateB">PublicationDate</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Experience:</Label>
-                                    <TextBlock  TextWrapping="Wrap" Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="experienceB">Experience</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Education:</Label>
-                                    <TextBlock TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="educationB">Education</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Salary:</Label>
-                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="salaryB">Salary</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>Description:</Label>
-                                    <TextBlock  TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="descriptionB"> Description</TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-
-                            <materialDesign:Card Margin="2">
-                                <StackPanel>
-                                    <Label>VacancyHref:</Label>
-                                    <TextBlock   TextWrapping="Wrap"  Padding="2" Style="{DynamicResource MaterialDesignTitleTextBlock}">   <Hyperlink Foreground="Indigo" Click="VacancyHrefB_OnClick"  x:Name="vacancyHrefB" NavigateUri="http://stackoverflow.com">  link </Hyperlink></TextBlock>
-                                </StackPanel>
-                            </materialDesign:Card>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
-            </TabItem>
+           
         </TabControl>
     </Grid>
 </controls:MetroWindow>
