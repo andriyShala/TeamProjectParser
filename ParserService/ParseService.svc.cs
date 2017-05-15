@@ -4,6 +4,8 @@ using System.Linq;
 using ClassLibrary;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.ServiceModel;
 
 namespace ParserService
 {
@@ -12,10 +14,13 @@ namespace ParserService
         public static object lockthread = new object();
         public static int id = 3151;
     }
+    [ServiceBehavior(
+    ConcurrencyMode = ConcurrencyMode.Single
+  )]
     public class ParseService : IParseService
     {
         private const int Timeout = 3600000;
-        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523), new RabotaUAParser(325) };
+        List<Parser> parseSites = new List<Parser>() {new ParseJobsUa(523), new RabotaUAParser(325) };
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -31,11 +36,13 @@ namespace ParserService
             }
             
         }
+
         private void UpdateDateSite(Parser site)
         {
-            Category tempvac = new Category();
-            foreach (var vac in tempvac.categoryCollection)
+          
+            foreach (var vac in Category.categoryCollection)
             {
+
                 try
                 {
                     foreach (var items in site.ParseByDate(vac, DateTime.Today))
@@ -53,12 +60,15 @@ namespace ParserService
                             lock (lockthread)
                             {
                                 model.Vacancies.Remove(items);
+                                model.SaveChanges();
                             }
+
                         }
                     }
                 }
                 catch
                 {
+
                 }
             }
         }
@@ -76,8 +86,8 @@ namespace ParserService
         public List<string> GetCategory()
         {
             List<string> categories = new List<string>();
-            Category tempvac = new Category();
-            foreach (var item in tempvac.categoryCollection)
+          
+            foreach (var item in Category.categoryCollection)
             {
                 categories.Add(item);
             }
@@ -116,7 +126,7 @@ namespace ParserService
             }
             return rangedata;
         }
-        public List<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
+        private List<Vacancy> GetVacanciesPrivate(string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -236,7 +246,7 @@ namespace ParserService
 
         }
 
-        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
+        private List<Vacancy> GetVacanciesBySearchPrivate(string NameVacancy, string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -382,7 +392,25 @@ namespace ParserService
 
         public void Start()
         {
-            UpdateDate();
+           Task.Run( ()=>UpdateDate());
+        }
+
+        public IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
+        {
+            foreach (var item in this.GetVacanciesPrivate(Category,City,Site,Day))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+
+        public IEnumerable<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
+        {
+            foreach (var item in this.GetVacanciesBySearchPrivate(NameVacancy,Category, City, Site, Day))
+            {
+                yield return item;
+            }
+            yield break;
         }
     }
 }
