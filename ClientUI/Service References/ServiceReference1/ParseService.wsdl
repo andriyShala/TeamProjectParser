@@ -38,6 +38,12 @@
   <wsdl:message name="IParseService_GetCity_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetCityResponse" />
   </wsdl:message>
+  <wsdl:message name="IParseService_Start_InputMessage">
+    <wsdl:part name="parameters" element="tns:Start" />
+  </wsdl:message>
+  <wsdl:message name="IParseService_Start_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StartResponse" />
+  </wsdl:message>
   <wsdl:portType name="IParseService">
     <wsdl:operation name="GetVacancies">
       <wsdl:input wsaw:Action="http://tempuri.org/IParseService/GetVacancies" message="tns:IParseService_GetVacancies_InputMessage" />
@@ -58,6 +64,10 @@
     <wsdl:operation name="GetCity">
       <wsdl:input wsaw:Action="http://tempuri.org/IParseService/GetCity" message="tns:IParseService_GetCity_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IParseService/GetCityResponse" message="tns:IParseService_GetCity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Start">
+      <wsdl:input wsaw:Action="http://tempuri.org/IParseService/Start" message="tns:IParseService_Start_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IParseService/StartResponse" message="tns:IParseService_Start_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IParseService" type="tns:IParseService">
@@ -100,6 +110,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetCity">
       <soap:operation soapAction="http://tempuri.org/IParseService/GetCity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Start">
+      <soap:operation soapAction="http://tempuri.org/IParseService/Start" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

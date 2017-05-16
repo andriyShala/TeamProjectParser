@@ -16,7 +16,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="150*"/>
 
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -74,11 +74,12 @@
 
                     </Expander>
 
-                    <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="3">
-                        
-                        <ListView Margin="10" Name="vacListView">
+
+
+                    <ListView   ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.CanContentScroll="False" Grid.Row="1" Grid.ColumnSpan="3" Margin="10" Name="vacListView">
                             <ListView.View>
-                                <GridView>
+                                <GridView >
                                     <GridViewColumn Header="Title" Width="150"  DisplayMemberBinding="{Binding Title}" />
                                     <GridViewColumn Header="Company" Width="150"  DisplayMemberBinding="{Binding Company}" />
                                     <GridViewColumn Header="Category" Width="100"  DisplayMemberBinding="{Binding Сategory}"/>
@@ -95,7 +96,7 @@
                         </ListView>
 
 
-                    </ScrollViewer>
+                   
                    
                 </Grid>
             </TabItem>

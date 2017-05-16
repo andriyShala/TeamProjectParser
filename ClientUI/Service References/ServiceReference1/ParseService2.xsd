@@ -22,7 +22,6 @@
       <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="TypeOfEmployment" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="VacancyHref" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="VacancyId" type="xs:int" />
       <xs:element minOccurs="0" name="Сategory" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
