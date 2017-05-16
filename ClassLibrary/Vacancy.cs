@@ -18,14 +18,14 @@
         public string TypeOfEmployment { get; set; }
         public string ContactPerson { get; set; }
         public string CompanyWebSite { get; set; }
-        public string VacancyHref { get; set; }
         public DateTime PublicationDate { get; set; }
         public string Description { get; set; }
 
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int VacancyId { get; set; }
+        public string VacancyHref { get; set; }
+
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

@@ -4,7 +4,6 @@ using System.Linq;
 using ClassLibrary;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
 using System.ServiceModel;
 
 namespace ParserService
@@ -34,18 +33,15 @@ namespace ParserService
                 }
                 model.SaveChanges();
             }
-            
         }
 
         private void UpdateDateSite(Parser site)
         {
-          
             foreach (var vac in Category.categoryCollection)
             {
-
                 try
                 {
-                    foreach (var items in site.ParseByDate(vac, DateTime.Today))
+                    foreach (var items in site.ParseByCategory(vac))
                     {
                         try
                         {
@@ -62,7 +58,6 @@ namespace ParserService
                                 model.Vacancies.Remove(items);
                                 model.SaveChanges();
                             }
-
                         }
                     }
                 }
@@ -74,14 +69,15 @@ namespace ParserService
         }
         private void UpdateDate()
         {
-            while (true)
-            {
-                foreach (var item in parseSites)
-                {
-                    Task.Run(() => UpdateDateSite(item));
-                }
-                Thread.Sleep(Timeout);
-            }
+            //while (true)
+            //{
+            //    foreach (var item in parseSites)
+            //    {
+            //        Task.Run(() => UpdateDateSite(item));
+            //    }
+            //    Thread.Sleep(Timeout);
+            //}
+            //Task.Run(() => new RabotaUAParser(325));
         }
         public List<string> GetCategory()
         {
@@ -392,7 +388,7 @@ namespace ParserService
 
         public void Start()
         {
-           Task.Run( ()=>UpdateDate());
+           UpdateDateSite(new RabotaUAParser(325));
         }
 
         public IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site, int Day)

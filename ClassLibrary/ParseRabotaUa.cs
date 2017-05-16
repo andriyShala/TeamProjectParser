@@ -147,27 +147,23 @@ namespace ClassLibrary
         public void ParseVacancyHeader(HtmlNode node, ref Vacancy vacancy, DateTime date)
         {
             var items = node.Descendants("div").Where(x => x.Attributes["class"].Value == "fd-f1").FirstOrDefault().ChildNodes;
-            if (node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault() != null)
-            {
-                dayAgo = node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault().FirstChild.InnerText;
-            }
-            else
-            {
-                dayAgo = null;
-            }
+
+            dayAgo = (node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault() != null) ?
+                node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault().FirstChild.InnerText : null;
+
             foreach (var itemNode in items)
             {
                 if (itemNode.NodeType == HtmlNodeType.Element)
                 {
                     if (itemNode.Attributes["class"].Value == "fd-beefy-gunso f-vacancylist-vacancytitle")
                     {
-                        vacancy.Title = itemNode.InnerText;
+                        vacancy.Title = itemNode.InnerText.Trim();
                         vacancy.VacancyHref = (itemNode.LastChild.NodeType == HtmlNodeType.Element) ? webSite + itemNode.LastChild.Attributes["href"].Value
                             : webSite + itemNode.FirstChild.Attributes["href"].Value;
                     }
                     else if (itemNode.Attributes["class"].Value == "f-vacancylist-companyname fd-merchant f-text-dark-bluegray")
                     {
-                        vacancy.Company = itemNode.InnerText;
+                        vacancy.Company = itemNode.InnerText.Trim();
                     }
                     else if (itemNode.Attributes["class"].Value == "f-vacancylist-characs-block fd-f-left-middle")
                     {
@@ -177,11 +173,11 @@ namespace ClassLibrary
                             {
                                 if (nextChildNode.Attributes["class"].Value == "fd-merchant")
                                 {
-                                    vacancy.Location = nextChildNode.InnerText;
+                                    vacancy.Location = nextChildNode.InnerText.Split(',')[0].Trim();
                                 }
-                                else if (nextChildNode.Attributes["class"].Value == "fd-beefy-soldier -price")
+                                if (nextChildNode.Attributes["class"].Value == "fd-beefy-soldier -price")
                                 {
-                                    vacancy.Salary = nextChildNode.InnerText;
+                                    vacancy.Salary = nextChildNode.InnerText.Trim();
                                 }
                             }
                         }
@@ -193,23 +189,27 @@ namespace ClassLibrary
 
         public void ParceFirstTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
-            foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
+            try
             {
-                switch (itemNode.FirstChild.InnerText)
+                foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
                 {
-                    case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText; break;
-                    case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText; break;
-                    case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText; break;
+                    switch (itemNode.FirstChild.InnerText)
+                    {
+                        case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText.Trim(); break;
+                        case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText.Trim(); break;
+                        case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText.Trim(); break;
+                    }
                 }
-            }
 
-            foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
-            {
-                if (itemNode.Attributes["title"].Value == "Вид занятости")
+                foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
                 {
-                    vacancy.TypeOfEmployment = itemNode.InnerText;
+                    if (itemNode.Attributes["title"].Value == "Вид занятости")
+                    {
+                        vacancy.TypeOfEmployment = itemNode.InnerText.Trim();
+                    }
                 }
             }
+            catch { }
         }
         public void ParseSecondTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
@@ -225,23 +225,23 @@ namespace ClassLibrary
                             {
                                 if (childNode.InnerText.Contains("Сайт"))
                                 {
-                                    vacancy.CompanyWebSite = childNode.InnerText;
+                                    vacancy.CompanyWebSite = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Вид занятости"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Контактное лицо"))
                                 {
-                                    vacancy.ContactPerson = childNode.InnerText;
+                                    vacancy.ContactPerson = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Опыт работы"))
                                 {
-                                    vacancy.Experience = childNode.InnerText;
+                                    vacancy.Experience = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Телефон"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.InnerText.Trim();
                                 }
                             }
                         }
@@ -264,15 +264,15 @@ namespace ClassLibrary
                             {
                                 if (childNode.FirstChild.InnerText.Contains("Контактное лицо") || childNode.FirstChild.InnerText.Contains("Контактна особа") || childNode.FirstChild.InnerText.Contains("Contact person"))
                                 {
-                                    vacancy.ContactPerson = childNode.LastChild.InnerText;
+                                    vacancy.ContactPerson = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Контактный телефон") || childNode.FirstChild.InnerText.Contains("Контактний телефон") || childNode.FirstChild.InnerText.Contains("Phone"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Вид занятости") || childNode.FirstChild.InnerText.Contains("Вид занятості") || childNode.FirstChild.InnerText.Contains("Job Type"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Сайт") || childNode.FirstChild.InnerText.Contains("Website"))
                                 {
@@ -302,17 +302,17 @@ namespace ClassLibrary
                         {
                             foreach (var childNode in itemNode.ChildNodes)
                             {
-                                vacancy.Description += childNode.InnerText + Environment.NewLine;
+                                vacancy.Description += childNode.InnerText.Trim() + Environment.NewLine;
                             }
                         }
                         else
                         {
-                            vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                            vacancy.Description += itemNode.InnerText.Trim() + Environment.NewLine;
                         }
                     }
                 }
             }
-            catch { } 
+            catch { }
         }
 
         public override IEnumerable<Vacancy> ParseByCategory(string category)
@@ -330,7 +330,7 @@ namespace ClassLibrary
                     {
                         if (itemNode != vacancyCollection[vacancyCollection.Count - 1])
                         {
-                            Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
+                            Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                             ParseVacancyHeader(itemNode, ref vacancy, new DateTime());
                             yield return vacancy;
                         }
@@ -360,7 +360,7 @@ namespace ClassLibrary
                             }
                             if (!checkDate)
                             {
-                                Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
+                                Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                                 ParseVacancyHeader(itemNode, ref vacancy, date);
                                 if (vacancy != null)
                                 {
@@ -373,13 +373,12 @@ namespace ClassLibrary
                             }
                             else
                             {
-                                yield break;
+                                break;
                             }
                         }
                     }
                 }
             }
-            yield break;
         }
     }
 }

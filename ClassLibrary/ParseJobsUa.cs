@@ -193,7 +193,6 @@ namespace ClassLibrary
 
                 tempVacancy.Сategory = category;
                 tempVacancy.ParseSiteId = siteId;
-                tempVacancy.VacancyId = Convert.ToInt32(node.Attributes["id"].Value);
                 foreach (var itemNode in node.ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
                     switch (itemNode.Attributes[0].Value)
@@ -306,7 +305,6 @@ namespace ClassLibrary
             }
             return temp;
         }
-
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             string valuecategory = null;
@@ -365,10 +363,5 @@ namespace ClassLibrary
             }
             yield break;
         }
-
-
-       
-        
-       
     }
 }
