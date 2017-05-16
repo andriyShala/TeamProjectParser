@@ -34,7 +34,7 @@ namespace ParserService
                 }
                 model.SaveChanges();
             }
-            Task.Run(() => UpdateDate());
+            //Task.Run(() => UpdateDate());
         }
         private void UpdateSite(Parser site)
         {

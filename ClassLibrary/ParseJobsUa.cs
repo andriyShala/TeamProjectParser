@@ -15,7 +15,7 @@ namespace ClassLibrary
         private int siteId;
         public override string SiteName
         {
-            get { return "Jobs"; }
+            get { return "Jobs.Ua"; }
         }
 
         public ParseJobsUa(int siteId)
