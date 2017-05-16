@@ -13,7 +13,13 @@ namespace ClassLibrary
         {
             this.id = id;
         }
-
+        public override int Id
+        {
+            get
+            {
+                return this.id;
+            }
+        }
         private void getInnerInformation(string link, ref Vacancy vacancy)
         {
             var Webget = new HtmlWeb();
@@ -136,7 +142,8 @@ namespace ClassLibrary
 
         public override IEnumerable<Vacancy> ParseByCategory(string keyCategory)
         {
-            int page = 1;
+            List<Vacancy> tempList = new List<Vacancy>();
+            int page = 0;
             string url = "";
             try
             {
@@ -144,7 +151,7 @@ namespace ClassLibrary
             }
             catch
             {
-                yield break;
+                return null;
             }
             var Webget = new HtmlWeb();
             var doc = Webget.Load(url);
@@ -163,46 +170,72 @@ namespace ClassLibrary
                     foreach (var node in doc.DocumentNode.SelectNodes("//table//tbody//tr[@class='wrap']//td//article"))
                     {
 
-                        Vacancy newVacancy = new Vacancy() { ParseSiteId = id };
-                        newVacancy.Сategory = keyCategory;
-                        if (node.SelectSingleNode("//h3") != null)
+                        Vacancy newVacancy = null; 
+                        try
                         {
-                            string title = node.SelectSingleNode("div[1]//h3").InnerText.Trim();
-                            newVacancy.Title = title;
-                            string link = node.SelectSingleNode("div[1]//h3//a").Attributes["href"].Value;
-                            newVacancy.VacancyHref = link;
-                            getInnerInformation(link, ref newVacancy);
+                            newVacancy = new Vacancy() { ParseSiteId = id };
+                            newVacancy.Сategory = keyCategory;
+                            if (node.SelectSingleNode("//h3") != null)
+                            {
+                                string title = node.SelectSingleNode("div[1]//h3").InnerText.Trim();
+                                newVacancy.Title = title;
+                                string link = node.SelectSingleNode("div[1]//h3//a").Attributes["href"].Value;
+                                newVacancy.VacancyHref = link;
+                                getInnerInformation(link, ref newVacancy);
+
+                            }
+
+                            if (node.SelectSingleNode("//ul") != null)
+                            {
+                                string city = node.SelectSingleNode("div[1]//ul//li[1]").InnerText;
+                                if (city.Contains(","))
+                                {
+                                    city = city.Remove(city.IndexOf(','));
+                                    newVacancy.Location = city;
+                                }
+                                else
+                                {
+                                    newVacancy.Location = city;
+                                }
+                            }
+                        }
+                        catch
+                        {
 
                         }
-
-                        if (node.SelectSingleNode("//ul") != null)
-                        {
-                            string city = node.SelectSingleNode("div[1]//ul//li[1]").InnerText;
-                            if (city.Contains(","))
-                            {
-                                city = city.Remove(city.IndexOf(','));
-                                newVacancy.Location = city;
-                            }
-                            else
-                            {
-                                newVacancy.Location = city;
-                            }
-                        }
-
-
-                        yield return newVacancy;
+                        if (newVacancy != null)
+                            tempList.Add(newVacancy);
                     }
                     page++;
-                    url = "https://www.olx.ua/rabota/" + categoryCollection[keyCategory] + "/?page=" + page;
+                    url = null;
+                    while(url==null)
+                    {
+                        try
+                        {
+                            url = "https://www.olx.ua/rabota/" + categoryCollection[keyCategory] + "/?page=" + page;
+                        }
+                        catch { }
+                    }
                     Webget = new HtmlWeb();
-                    doc = Webget.Load(url);
+                    doc = null;
+                    while (doc == null)
+                    {
+                        try
+                        {
+                            doc = Webget.Load(url);
+                        }
+                        catch { }
+                    }
 
                 }
             }
+            return tempList;
         }
 
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
+            List<Vacancy> tempList = new List<Vacancy>();
+
             int page = 1;
             string url = "";
             try
@@ -211,7 +244,7 @@ namespace ClassLibrary
             }
             catch
             {
-                yield break;
+                return null;
             }
             var Webget = new HtmlWeb();
             var doc = Webget.Load(url);
@@ -226,7 +259,7 @@ namespace ClassLibrary
                 {
                     foreach (var node in doc.DocumentNode.SelectNodes("//table//tbody//tr[@class='wrap']//td//article"))
                     {
-                        Va newVacancy = new Vacancy();
+                        Vacancy newVacancy = new Vacancy();
                         if (node.SelectSingleNode("//h3") != null)
                         {
                             string title = node.SelectSingleNode("div[1]//h3").InnerText.Trim();
@@ -257,7 +290,7 @@ namespace ClassLibrary
                             newVacancy.Salary = salary;
                         }
 
-                        yield return newVacancy;
+                        tempList.Add(newVacancy);
                     }
                     page++;
                     url = "https://www.olx.ua/rabota/" + categoryCollection[keyCategory] + "/?page=" + page;
@@ -266,6 +299,7 @@ namespace ClassLibrary
 
                 }
             }
+            return tempList;
         }
 
         public Dictionary<string, string> categoryCollection = new Dictionary<string, string>() {

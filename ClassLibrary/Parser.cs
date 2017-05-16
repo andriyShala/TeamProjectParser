@@ -11,5 +11,6 @@ namespace ClassLibrary
         public abstract IEnumerable<Vacancy> ParseByCategory(string keyCategory);
         public abstract IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date);
         public abstract string SiteName { get; }
+        public abstract int Id { get; }
     }
 }

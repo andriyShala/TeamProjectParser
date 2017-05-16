@@ -57,9 +57,9 @@
     <Compile Include="Parser.cs" />
     <Compile Include="ParseJobsUa.cs" />
     <Compile Include="ParseRabotaUa.cs" />
-    <Compile Include="ParserWorkUa.cs" />
     <Compile Include="ParserOlxUa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RiaParser.cs" />
     <Compile Include="Site.cs" />
     <Compile Include="Vacancy.cs" />
   </ItemGroup>

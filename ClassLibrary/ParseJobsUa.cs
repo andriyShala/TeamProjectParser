@@ -18,6 +18,14 @@ namespace ClassLibrary
             get { return "Jobs.Ua"; }
         }
 
+        public override int Id
+        {
+            get
+            {
+                return siteId;
+            }
+        }
+
         public ParseJobsUa(int siteId)
         {
             stringRegexDate = @"([0-9][0-9]*)(\s\S*)";
@@ -103,10 +111,32 @@ namespace ClassLibrary
 
         private Vacancy GetContentFromHttp(string href, Vacancy vacancy)
         {
-            HtmlDocument document = web.Load(href);
-            HtmlNode[] links =
-                document.DocumentNode.SelectNodes("//div[@class='b-vacancy-full js-item_full']").ToArray();
-            foreach (var item in links[0].ChildNodes)
+
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument document=null;
+            while (document == null)
+            {
+                try
+                {
+                    document = web.Load(href);
+                }
+                catch
+                {
+
+                }
+           }
+            HtmlNode[] links = null;
+            while(links==null)
+            {
+                try
+                {
+                    links = document.DocumentNode.SelectNodes("//div[@class='b-vacancy-full js-item_full']").ToArray();
+                }
+                catch 
+                {
+                }
+            }
+            foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
             {
                 try
                 {
@@ -154,8 +184,29 @@ namespace ClassLibrary
         {
             try
             {
-                HtmlDocument document = web.Load(href);
-                HtmlNode[] links = document.DocumentNode.SelectNodes("//div[@class='b-pager__inner']").ToArray();
+                HtmlDocument document = null;
+                while (document == null)
+                {
+                    try
+                    {
+                        document = web.Load(href);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                HtmlNode[] links = null;
+                while (links == null)
+                {
+                    try
+                    {
+                        links = document.DocumentNode.SelectNodes("//div[@class='b-pager__inner']").ToArray();
+                    }
+                    catch
+                    {
+                    }
+                }
                 string s = links[0].ChildNodes[links[0].ChildNodes.Count - 1].InnerText;
                 return Convert.ToInt32(s);
             }
@@ -256,6 +307,8 @@ namespace ClassLibrary
 
         public override IEnumerable<Vacancy> ParseByCategory(string keyCategory)
         {
+            List<Vacancy> tempList = new List<Vacancy>();
+
             string valuecategory = null;
             try
             {
@@ -263,7 +316,7 @@ namespace ClassLibrary
             }
             catch
             {
-                yield break;
+                return null;
             }
             string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
@@ -273,8 +326,16 @@ namespace ClassLibrary
                 additionalPeriod = "/page-" + i;
                 HtmlDocument document = null;
                 HtmlNode[] links = null;
-
-                document = web.Load(href + additionalPeriod);
+                while(document==null)
+                {
+                    try
+                    {
+                        document = web.Load(href + additionalPeriod);
+                    }
+                    catch 
+                    {
+                    }
+                }
                 while (links == null)
                 {
                     try
@@ -286,7 +347,6 @@ namespace ClassLibrary
                         
                     }
                 }
-                List<HtmlNode> sitesvacancy = new List<HtmlNode>();
                 foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
                     Vacancy tempVacancy = null;
@@ -304,8 +364,8 @@ namespace ClassLibrary
                             }
                         }
                     }
-                    if(tempVacancy!=null)
-                    yield return tempVacancy;
+                    if (tempVacancy != null && tempVacancy.Title != null)
+                        tempList.Add(tempVacancy);
                     else
                     {
                         continue;
@@ -314,11 +374,12 @@ namespace ClassLibrary
                 }
 
             }
-           yield break;
+           return tempList;
         }
 
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
+            List<Vacancy> tempList = new List<Vacancy>();
             string valuecategory = null;
             try
             {
@@ -326,7 +387,7 @@ namespace ClassLibrary
             }
             catch
             {
-                yield break;
+                return null;
             }
             string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
@@ -336,14 +397,15 @@ namespace ClassLibrary
                 additionalPeriod = "/page-" + i;
                 HtmlDocument document = null;
                 HtmlNode[] links = null;
-                try
+                while (document == null)
                 {
-                    document = web.Load(href + additionalPeriod);
-                }
-                catch
-                {
-
-                    yield break;
+                    try
+                    {
+                        document = web.Load(href + additionalPeriod);
+                    }
+                    catch
+                    {
+                    }
                 }
 
                 while (links == null)
@@ -359,6 +421,10 @@ namespace ClassLibrary
                 }
                 foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
+                    if(item.Name=="#text")
+                    {
+                        continue;
+                    }
                     Vacancy tempVacancy = null;
                     if (item != null)
                     {
@@ -376,22 +442,22 @@ namespace ClassLibrary
                     }
                     if (tempVacancy.PublicationDate != date)
                     {
-                        if(i!=1)
+                        if (i != 1)
                         {
-                            yield break;
+                            return null;
                         }
                     }
                     else
-                        yield return tempVacancy;
+                        tempList.Add(tempVacancy);
                 }
                
             }
-            yield break;
+            return tempList;
         }
 
 
-       
-        
-       
+
+
+
     }
 }

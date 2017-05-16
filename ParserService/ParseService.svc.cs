@@ -20,7 +20,7 @@ namespace ParserService
     public class ParseService : IParseService
     {
         private const int Timeout = 10800000;
-        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523),new RabotaUAParser(325),new ParserOlxUa(231)};
+        List<Parser> parseSites = new List<Parser>() { new RabotaUAParser(325)/*,new ParserOlxUa(213),new ParseJobsUa(532),new RiaParser(555)*/};
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -30,11 +30,10 @@ namespace ParserService
             {
                 foreach (var site in parseSites)
                 {
-                    model.Sites.Add(new Site() { id = temp.id++, name = site.SiteName });
+                    model.Sites.Add(new Site() { id = site.Id, name = site.SiteName });
                 }
                 model.SaveChanges();
             }
-            //Task.Run(() => UpdateDate());
         }
         private void UpdateSite(Parser site)
         {
@@ -434,9 +433,34 @@ namespace ParserService
         {
             Task.Run(() => UpdateAll());
         }
-
-      
-
-       
+        public void StartParser(int idSite,string Category)
+        {
+            Task.Run(() => ParserIdSite(idSite, Category));
+        }
+        public void StartUpdateDataDate()
+        {
+            Task.Run(() => UpdateAll());
+        }
+        private void ParserIdSite(int id,string Category)
+        {
+            try
+            {
+                var site = model.Sites.Where(x => x.id == id).FirstOrDefault();
+                foreach (var item in parseSites.Where(x => x.SiteName == site.name).First().ParseByCategory(Category))
+                {
+                    try
+                    {
+                        model.Vacancies.Add(item);
+                        model.SaveChanges();
+                    }
+                    catch
+                    {
+                        model.Vacancies.Remove(item);
+                        model.SaveChanges();
+                    }
+                }
+            }
+            catch { }
+        }
     }
 }
