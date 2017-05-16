@@ -8,27 +8,11 @@ namespace ClassLibrary
 {
     public class ParseJobsUa : Parser
     {
-        private class primaryVacancy
-        {
-            public List<Vacancy> vac;
-            public HtmlNode node;
-            public string vacancy;
-
-            public primaryVacancy(ref List<Vacancy> vac, HtmlNode node, string vacancy)
-            {
-                this.vac = vac;
-                this.node = node;
-                this.vacancy = vacancy;
-            }
-        }
-
         private string stringRegexDate;
-
         private Regex regex;
         private HtmlWeb web;
         private Dictionary<string, string> category;
         private int siteId;
-
         public override string SiteName
         {
             get { return "Jobs"; }
@@ -193,7 +177,6 @@ namespace ClassLibrary
 
                 tempVacancy.Сategory = category;
                 tempVacancy.ParseSiteId = siteId;
-                tempVacancy.VacancyId = Convert.ToInt32(node.Attributes["id"].Value);
                 foreach (var itemNode in node.ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
                     switch (itemNode.Attributes[0].Value)
@@ -280,11 +263,8 @@ namespace ClassLibrary
             }
             catch
             {
-                return new List<Vacancy>();
+                yield break;
             }
-
-            List<Vacancy> temp = new List<Vacancy>();
-            List<Vacancy> temp2 = new List<Vacancy>();
             string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
             int countpages = GetnumbersOfPage(href);
@@ -295,16 +275,46 @@ namespace ClassLibrary
                 HtmlNode[] links = null;
 
                 document = web.Load(href + additionalPeriod);
-                links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                while (links == null)
+                {
+                    try
+                    {
+                        links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                    }
+                    catch 
+                    {
+                        
+                    }
+                }
                 List<HtmlNode> sitesvacancy = new List<HtmlNode>();
                 foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
+                    Vacancy tempVacancy = null;
+                    if (item != null)
+                    {
+                        while (tempVacancy == null)
+                        {
+                            try
+                            {
+                                tempVacancy = GetVacancyByNode(item, keyCategory);
+                            }
+                            catch
+                            {
 
+                            }
+                        }
+                    }
+                    if(tempVacancy!=null)
+                    yield return tempVacancy;
+                    else
+                    {
+                        continue;
+                    }
 
                 }
 
             }
-            return temp;
+           yield break;
         }
 
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
@@ -324,7 +334,7 @@ namespace ClassLibrary
             for (int i = 1; i <= countpages; i++)
             {
                 additionalPeriod = "/page-" + i;
-                HtmlAgilityPack.HtmlDocument document = null;
+                HtmlDocument document = null;
                 HtmlNode[] links = null;
                 try
                 {
@@ -336,20 +346,34 @@ namespace ClassLibrary
                     yield break;
                 }
 
-                links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
-                foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
+                while (links == null)
                 {
-                    Vacancy tempVacancy = null;
                     try
                     {
-                        tempVacancy = GetVacancyByNode(item, keyCategory);
+                        links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
                     }
                     catch
                     {
-                        
-                        yield break;
+
                     }
-                  
+                }
+                foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
+                {
+                    Vacancy tempVacancy = null;
+                    if (item != null)
+                    {
+                        while (tempVacancy == null)
+                        {
+                            try
+                            {
+                                tempVacancy = GetVacancyByNode(item, keyCategory);
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                    }
                     if (tempVacancy.PublicationDate != date)
                     {
                         if(i!=1)
@@ -359,7 +383,6 @@ namespace ClassLibrary
                     }
                     else
                         yield return tempVacancy;
-
                 }
                
             }

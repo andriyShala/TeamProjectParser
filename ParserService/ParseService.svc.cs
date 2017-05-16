@@ -20,7 +20,7 @@ namespace ParserService
     public class ParseService : IParseService
     {
         private const int Timeout = 10800000;
-        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523),new RabotaUAParser(325) };
+        List<Parser> parseSites = new List<Parser>() { new ParseJobsUa(523),new RabotaUAParser(325),new ParserOlxUa(231)};
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -160,7 +160,7 @@ namespace ParserService
             }
             return rangedata;
         }
-        private List<Vacancy> GetVacanciesPrivate(string Category, string City, string Site, int Day)
+        public List<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -280,7 +280,7 @@ namespace ParserService
 
         }
 
-        private List<Vacancy> GetVacanciesBySearchPrivate(string NameVacancy, string Category, string City, string Site, int Day)
+        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -435,22 +435,8 @@ namespace ParserService
             Task.Run(() => UpdateAll());
         }
 
-        public IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
-        {
-            foreach (var item in this.GetVacanciesPrivate(Category,City,Site,Day))
-            {
-                yield return item;
-            }
-            yield break;
-        }
+      
 
-        public IEnumerable<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
-        {
-            foreach (var item in this.GetVacanciesBySearchPrivate(NameVacancy,Category, City, Site, Day))
-            {
-                yield return item;
-            }
-            yield break;
-        }
+       
     }
 }

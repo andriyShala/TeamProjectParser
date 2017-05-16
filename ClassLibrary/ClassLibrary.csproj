@@ -58,6 +58,7 @@
     <Compile Include="ParseJobsUa.cs" />
     <Compile Include="ParseRabotaUa.cs" />
     <Compile Include="ParserWorkUa.cs" />
+    <Compile Include="ParserOlxUa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.cs" />
     <Compile Include="Vacancy.cs" />

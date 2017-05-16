@@ -24,46 +24,40 @@ namespace ClassLibrary
         public RabotaUAParser(int siteId)
         {
             category = new Dictionary<string, string>() {
-                { "HR, управление персоналом", "https://rabota.ua/%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D0%B8/hr-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D1%8B/%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0" },
-                { "IT, WEB специалисты", "https://rabota.ua/%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D0%B8/%D0%B2_%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5/%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0" },
-                { "Банковское дело, ломбарды", "https://rabota.ua/%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D0%B8/%D0%B2_%D0%B1%D0%B0%D0%BD%D0%BA%D0%B5/%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0" },
-                { "Бухгалтерия, финансы, учет/аудит", "https://rabota.ua/%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D0%B8/%D0%B2_%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%B0%D1%85/%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0" },
-                { "Гостиничный бизнес", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b3%d0%be%d1%81%d1%82%d0%b8%d0%bd%d0%b8%d1%86%d1%8b-%d1%80%d0%b5%d1%81%d1%82%d0%be%d1%80%d0%b0%d0%bd%d1%8b/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Дизайн, творчество", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b4%d0%b8%d0%b7%d0%b0%d0%b9%d0%bd-%d0%b3%d1%80%d0%b0%d1%84%d0%b8%d0%ba%d0%b0-%d1%84%d0%be%d1%82%d0%be/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Домашний сервис", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%80%d0%b0%d0%b1%d0%be%d1%87%d0%b8%d0%b5_%d1%81%d0%bf%d0%b5%d1%86%d0%b8%d0%b0%d0%bb%d1%8c%d0%bd%d0%be%d1%81%d1%82%d0%b8/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Издательство, полиграфия", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d1%81%d0%bc%d0%b8/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Консалтинг", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%ba%d0%be%d0%bd%d1%81%d0%b0%d0%bb%d1%82%d0%b8%d0%bd%d0%b3%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Красота и SPA-услуги", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bc%d0%b0%d1%80%d0%ba%d0%b5%d1%82%d0%b8%d0%bd%d0%b3%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Легкая промышленность", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Логистика, доставка, склад", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%bb%d0%be%d0%b3%d0%b8%d1%81%d1%82%d0%b8%d0%ba%d0%b0-%d1%82%d0%b0%d0%bc%d0%be%d0%b6%d0%bd%d1%8f-%d1%81%d0%ba%d0%bb%d0%b0%d0%b4/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Медицина, фармацевтика", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bc%d0%b5%d0%b4%d0%b8%d1%86%d0%b8%d0%bd%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Наука, образование, переводы", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%bd%d0%b0%d1%83%d0%ba%d0%b0-%d0%be%d0%b1%d1%80%d0%b0%d0%b7%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Недвижимость и страхование", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%bd%d0%b5%d0%b4%d0%b2%d0%b8%d0%b6%d0%b8%d0%bc%d0%be%d1%81%d1%82%d1%8c/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Офисный персонал", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bc%d0%b0%d1%80%d0%ba%d0%b5%d1%82%d0%b8%d0%bd%d0%b3%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Охрана, безопасность", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b1%d0%b5%d0%b7%d0%be%d0%bf%d0%b0%d1%81%d0%bd%d0%be%d1%81%d1%82%d1%8c/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Производство", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%b2%d0%be%d0%b4%d1%81%d1%82%d0%b2%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Реклама, маркетинг, PR", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bc%d0%b0%d1%80%d0%ba%d0%b5%d1%82%d0%b8%d0%bd%d0%b3%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Ремонт техники и предметов быта", "" },
-                { "Ресторанный бизнес, кулинария", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b3%d0%be%d1%81%d1%82%d0%b8%d0%bd%d0%b8%d1%86%d1%8b-%d1%80%d0%b5%d1%81%d1%82%d0%be%d1%80%d0%b0%d0%bd%d1%8b/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Руководство", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%82%d0%be%d0%bf-%d0%bc%d0%b5%d0%bd%d0%b5%d0%b4%d0%b6%d0%bc%d0%b5%d0%bd%d1%82/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Сельское хозяйство, агробизнес", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%81%d0%b5%d0%bb%d1%8c%d1%81%d0%ba%d0%be%d0%b5_%d1%85%d0%be%d0%b7%d1%8f%d0%b9%d1%81%d1%82%d0%b2%d0%be/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "СМИ, TV, Радио", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d1%81%d0%bc%d0%b8/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Строительство, архитектура", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%81%d1%82%d1%80%d0%be%d0%b8%d1%82%d0%b5%d0%bb%d1%8c%d1%81%d1%82%d0%b2%d0%be-%d0%b0%d1%80%d1%85%d0%b8%d1%82%d0%b5%d0%ba%d1%82%d1%83%d1%80%d0%b0/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Сфера развлечений", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d1%88%d0%be%d1%83_%d0%b1%d0%b8%d0%b7%d0%bd%d0%b5%d1%81%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Телекоммуникации и связь", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%82%d0%b5%d0%bb%d0%b5%d0%ba%d0%be%d0%bc%d0%bc%d1%83%d0%bd%d0%b8%d0%ba%d0%b0%d1%86%d0%b8%d0%b8-%d1%81%d0%b2%d1%8f%d0%b7%d1%8c/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Торговля, продажи, закупки", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bf%d1%80%d0%be%d0%b4%d0%b0%d0%b6%d0%b0%d1%85/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Транспорт, автосервис", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%b0%d0%b2%d1%82%d0%be%d0%b1%d0%b8%d0%b7%d0%bd%d0%b5%d1%81%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Туризм и спорт", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%82%d1%83%d1%80%d0%b8%d0%b7%d0%bc-%d0%bf%d1%83%d1%82%d0%b5%d1%88%d0%b5%d1%81%d1%82%d0%b2%d0%b8%d1%8f/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Юриспруденция, право", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%8e%d1%80%d0%b8%d1%81%d1%82%d1%8b-%d0%b0%d0%b4%d0%b2%d0%be%d0%ba%d0%b0%d1%82%d1%8b/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Работа без квалификации", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b4%d0%bb%d1%8f_%d1%81%d1%82%d1%83%d0%b4%d0%b5%d0%bd%d1%82%d0%be%d0%b2/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Работа для студентов", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b4%d0%bb%d1%8f_%d1%81%d1%82%d1%83%d0%b4%d0%b5%d0%bd%d1%82%d0%be%d0%b2/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Работа за рубежом", "" },
-                { "Людям с ограниченными возможностями", "" },
-                { "Другие предложения", "" },
-                { "Морские специальности", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b2_%d0%bc%d0%be%d1%80%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0" },
-                { "Государственные учреждения - Местное самоуправление", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%b3%d0%be%d1%81%d1%83%d0%b4%d0%b0%d1%80%d1%81%d1%82%d0%b2%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5_%d1%83%d1%87%d1%80%d0%b5%d0%b6%d0%b4%d0%b5%d0%bd%d0%b8%d1%8f/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0"},
-                { "Некоммерческие - Общественные организации", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d0%bd%d0%b5%d0%ba%d0%be%d0%bc%d0%bc%d0%b5%d1%80%d1%87%d0%b5%d1%81%d0%ba%d0%b8%d0%b5_%d0%be%d1%80%d0%b3%d0%b0%d0%bd%d0%b8%d0%b7%d0%b0%d1%86%d0%b8%d0%b8/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0"},
-                { "Страхование", "https://rabota.ua/%d0%b2%d0%b0%d0%ba%d0%b0%d0%bd%d1%81%d0%b8%d0%b8/%d1%81%d1%82%d1%80%d0%b0%d1%85%d0%be%d0%b2%d0%b0%d0%bd%d0%b8%d0%b5/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0"} };
+                { "HR, управление персоналом", "https://rabota.ua/вакансии/hr-специалисты/украина" },
+                { "IT, WEB специалисты", "https://rabota.ua/вакансии/в_интернете/украина" },
+                { "Банковское дело, ломбарды", "https://rabota.ua/вакансии/в_банке/украина" },
+                { "Бухгалтерия, финансы, учет/аудит", "https://rabota.ua/вакансии/в_финансах/украина" },
+                { "Гостиничный бизнес", "https://rabota.ua/вакансии/гостиницы-рестораны/украина" },
+                { "Дизайн, творчество", "https://rabota.ua/вакансии/дизайн-графика-фото/украина" },
+                { "Домашний сервис", "https://rabota.ua/вакансии/рабочие_специальности/украина" },
+                { "Издательство, полиграфия", "https://rabota.ua/вакансии/в_сми/украина" },
+                { "Консалтинг", "https://rabota.ua/вакансии/в_консалтинге/украина" },
+                { "Красота и SPA-услуги", "https://rabota.ua/вакансии/в_спорте/украина" },
+                { "Логистика, доставка, склад", "https://rabota.ua/вакансии/логистика-таможня-склад/украина" },
+                { "Медицина, фармацевтика", "https://rabota.ua/вакансии/в_медицине/украина" },
+                { "Наука, образование, переводы", "https://rabota.ua/вакансии/наука-образование/украина" },
+                { "Недвижимость и страхование", "https://rabota.ua/вакансии/недвижимость/украина" },
+                { "Офисный персонал", "https://rabota.ua/вакансии/в_офисе/украина" },
+                { "Закупки - Снабжение", "https://rabota.ua/вакансии/в_снабжении/украина"},
+                { "Охрана, безопасность", "https://rabota.ua/вакансии/безопасность/украина" },
+                { "Производство", "https://rabota.ua/вакансии/в_производстве/украина" },
+                { "Реклама, маркетинг, PR", "https://rabota.ua/вакансии/в_маркетинге/украина" },
+                { "Руководство", "https://rabota.ua/вакансии/топ-менеджмент/украина" },
+                { "Сельское хозяйство, агробизнес", "https://rabota.ua/вакансии/сельское_хозяйство/украина" },
+                { "Строительство, архитектура", "https://rabota.ua/вакансии/строительство-архитектура/украина" },
+                { "Сфера развлечений", "https://rabota.ua/вакансии/в_шоу_бизнесе/украина" },
+                { "Телекоммуникации и связь", "https://rabota.ua/вакансии/телекоммуникации-связь/украина" },
+                { "Торговля, продажи, закупки", "https://rabota.ua/вакансии/в_продажах/украина" },
+                { "Транспорт, автосервис", "https://rabota.ua/вакансии/в_автобизнесе/украина" },
+                { "Торговля","https://rabota.ua/вакансии/торговля/украина"},
+                { "Туризм и спорт", "https://rabota.ua/вакансии/туризм-путешествия/украина" },
+                { "Юриспруденция, право", "https://rabota.ua/вакансии/юристы-адвокаты/украина" },
+                { "Работа для студентов", "https://rabota.ua/вакансии/для_студентов/украина" },
+                { "Морские специальности", "https://rabota.ua/вакансии/в_море/украина" },
+                { "Государственные учреждения - Местное самоуправление", "https://rabota.ua/вакансии/государственные_учреждения/украина"},
+                { "Некоммерческие - Общественные организации", "https://rabota.ua/вакансии/некоммерческие_организации/украина"},
+                { "Страхование", "https://rabota.ua/вакансии/страхование/украина"} };
             webSiteId = siteId;
         }
         public int GetNumberOfPages(string category)
@@ -147,27 +141,23 @@ namespace ClassLibrary
         public void ParseVacancyHeader(HtmlNode node, ref Vacancy vacancy, DateTime date)
         {
             var items = node.Descendants("div").Where(x => x.Attributes["class"].Value == "fd-f1").FirstOrDefault().ChildNodes;
-            if (node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault() != null)
-            {
-                dayAgo = node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault().FirstChild.InnerText;
-            }
-            else
-            {
-                dayAgo = null;
-            }
+
+            dayAgo = (node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault() != null) ?
+                node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault().FirstChild.InnerText : null;
+
             foreach (var itemNode in items)
             {
                 if (itemNode.NodeType == HtmlNodeType.Element)
                 {
                     if (itemNode.Attributes["class"].Value == "fd-beefy-gunso f-vacancylist-vacancytitle")
                     {
-                        vacancy.Title = itemNode.InnerText;
+                        vacancy.Title = itemNode.InnerText.Trim();
                         vacancy.VacancyHref = (itemNode.LastChild.NodeType == HtmlNodeType.Element) ? webSite + itemNode.LastChild.Attributes["href"].Value
                             : webSite + itemNode.FirstChild.Attributes["href"].Value;
                     }
                     else if (itemNode.Attributes["class"].Value == "f-vacancylist-companyname fd-merchant f-text-dark-bluegray")
                     {
-                        vacancy.Company = itemNode.InnerText;
+                        vacancy.Company = itemNode.InnerText.Trim();
                     }
                     else if (itemNode.Attributes["class"].Value == "f-vacancylist-characs-block fd-f-left-middle")
                     {
@@ -177,11 +167,11 @@ namespace ClassLibrary
                             {
                                 if (nextChildNode.Attributes["class"].Value == "fd-merchant")
                                 {
-                                    vacancy.Location = nextChildNode.InnerText;
+                                    vacancy.Location = nextChildNode.InnerText.Split(',')[0].Trim();
                                 }
-                                else if (nextChildNode.Attributes["class"].Value == "fd-beefy-soldier -price")
+                                if (nextChildNode.Attributes["class"].Value == "fd-beefy-soldier -price")
                                 {
-                                    vacancy.Salary = nextChildNode.InnerText;
+                                    vacancy.Salary = nextChildNode.InnerText.Trim();
                                 }
                             }
                         }
@@ -193,23 +183,27 @@ namespace ClassLibrary
 
         public void ParceFirstTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
-            foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
+            try
             {
-                switch (itemNode.FirstChild.InnerText)
+                foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
                 {
-                    case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText; break;
-                    case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText; break;
-                    case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText; break;
+                    switch (itemNode.FirstChild.InnerText)
+                    {
+                        case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText.Trim(); break;
+                        case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText.Trim(); break;
+                        case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText.Trim(); break;
+                    }
                 }
-            }
 
-            foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
-            {
-                if (itemNode.Attributes["title"].Value == "Вид занятости")
+                foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
                 {
-                    vacancy.TypeOfEmployment = itemNode.InnerText;
+                    if (itemNode.Attributes["title"].Value == "Вид занятости")
+                    {
+                        vacancy.TypeOfEmployment = itemNode.InnerText.Trim();
+                    }
                 }
             }
+            catch { }
         }
         public void ParseSecondTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
@@ -225,23 +219,23 @@ namespace ClassLibrary
                             {
                                 if (childNode.InnerText.Contains("Сайт"))
                                 {
-                                    vacancy.CompanyWebSite = childNode.InnerText;
+                                    vacancy.CompanyWebSite = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Вид занятости"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Контактное лицо"))
                                 {
-                                    vacancy.ContactPerson = childNode.InnerText;
+                                    vacancy.ContactPerson = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Опыт работы"))
                                 {
-                                    vacancy.Experience = childNode.InnerText;
+                                    vacancy.Experience = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Телефон"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.InnerText.Trim();
                                 }
                             }
                         }
@@ -264,15 +258,15 @@ namespace ClassLibrary
                             {
                                 if (childNode.FirstChild.InnerText.Contains("Контактное лицо") || childNode.FirstChild.InnerText.Contains("Контактна особа") || childNode.FirstChild.InnerText.Contains("Contact person"))
                                 {
-                                    vacancy.ContactPerson = childNode.LastChild.InnerText;
+                                    vacancy.ContactPerson = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Контактный телефон") || childNode.FirstChild.InnerText.Contains("Контактний телефон") || childNode.FirstChild.InnerText.Contains("Phone"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Вид занятости") || childNode.FirstChild.InnerText.Contains("Вид занятості") || childNode.FirstChild.InnerText.Contains("Job Type"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Сайт") || childNode.FirstChild.InnerText.Contains("Website"))
                                 {
@@ -302,17 +296,17 @@ namespace ClassLibrary
                         {
                             foreach (var childNode in itemNode.ChildNodes)
                             {
-                                vacancy.Description += childNode.InnerText + Environment.NewLine;
+                                vacancy.Description += childNode.InnerText.Trim() + Environment.NewLine;
                             }
                         }
                         else
                         {
-                            vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                            vacancy.Description += itemNode.InnerText.Trim() + Environment.NewLine;
                         }
                     }
                 }
             }
-            catch { } 
+            catch { }
         }
 
         public override IEnumerable<Vacancy> ParseByCategory(string category)
@@ -330,7 +324,7 @@ namespace ClassLibrary
                     {
                         if (itemNode != vacancyCollection[vacancyCollection.Count - 1])
                         {
-                            Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
+                            Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                             ParseVacancyHeader(itemNode, ref vacancy, new DateTime());
                             yield return vacancy;
                         }
@@ -360,7 +354,7 @@ namespace ClassLibrary
                             }
                             if (!checkDate)
                             {
-                                Vacancy vacancy = new Vacancy { VacancyId = Convert.ToInt32(itemNode.Attributes["id"].Value), ParseSiteId = webSiteId ,Сategory=item.Key};
+                                Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                                 ParseVacancyHeader(itemNode, ref vacancy, date);
                                 if (vacancy != null)
                                 {
@@ -373,13 +367,12 @@ namespace ClassLibrary
                             }
                             else
                             {
-                                yield break;
+                                break;
                             }
                         }
                     }
                 }
             }
-            yield break;
         }
     }
 }
