@@ -4,56 +4,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientUI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Vacantion Parser" Height="500" Width="700">
+        Title="Vacantion Parser" Height="500" Width="700" Icon="Img/search.png">
     <Grid>
         <TabControl>
             <TabItem Header="Search">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="150*"/>
+
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150*"/>
                         <ColumnDefinition Width="150*"/>
-                        <ColumnDefinition Width="150*"/>
+
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Margin="2" Grid.Column="0" Grid.Row="0">
-                        <Label >Site:</Label>
-                        <ComboBox x:Name="siteChooseCB" ></ComboBox>
-                    </StackPanel>
-                    <StackPanel  Margin="2" Grid.Column="1" Grid.Row="0">
-                        <Label >Category:</Label>
-                        <ComboBox x:Name="categoryChooseCB" ></ComboBox>
-                    </StackPanel>
-                    <StackPanel  Margin="2" Grid.Column="2" Grid.Row="0">
-                        <Label >Region:</Label>
-                        <ComboBox x:Name="regionChooseCB" ></ComboBox>
-                    </StackPanel>
-                    <Button Grid.Column="3"  Style="{DynamicResource MetroCircleButtonStyle}">
-                        <Image Width="30" Height="30" Source="Img/search.png" />
-                    </Button>
-                    <StackPanel  Margin="2" Grid.Column="0" Grid.Row="1">
-                        <Label >Date:</Label>
-                        <ComboBox x:Name="dateBox">
-                            <ComboBoxItem Content="7"/>
-                            <ComboBoxItem Content="14"/>
-                            <ComboBoxItem Content="30"/>
-                        </ComboBox>
-                    </StackPanel>
-                 
+
+                    <Expander IsExpanded="True"  Padding="5" Header="Search" Grid.Row="0" Grid.ColumnSpan="3">
+
+                        <Grid Margin="10,0,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="60"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150*"/>
+                                <ColumnDefinition Width="150*"/>
+
+                                <ColumnDefinition Width="60"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="2" Grid.ColumnSpan="2" Grid.Row="0">
+
+                                <TextBox x:Name="searchBox"></TextBox>
+                            </StackPanel>
+
+                            <Button x:Name="searchBut" Click="SearchBut_OnClick" Grid.Column="2"  Style="{DynamicResource MetroCircleButtonStyle}">
+                                <Image Width="30" Height="30" Source="Img/search.png" />
+                            </Button>
+                            <StackPanel Margin="2" Grid.Column="0" Grid.Row="1">
+                                <Label >Site:</Label>
+                                <ComboBox x:Name="siteChooseCB" ></ComboBox>
+                            </StackPanel>
+                            <StackPanel  Margin="2" Grid.Column="1" Grid.Row="1">
+                                <Label >Category:</Label>
+                                <ComboBox x:Name="categoryChooseCB" ></ComboBox>
+                            </StackPanel>
+                            <StackPanel  Margin="2" Grid.Column="1" Grid.Row="2">
+                                <Label >Region:</Label>
+                                <ComboBox x:Name="regionChooseCB" ></ComboBox>
+                            </StackPanel>
+
+                            <StackPanel  Margin="2" Grid.Column="0" Grid.Row="2">
+                                <Label >Date:</Label>
+                                <ComboBox x:Name="dateBox">
+                                    <ComboBoxItem Content="1"/>
+                                    <ComboBoxItem Content="7"/>
+                                    <ComboBoxItem Content="14"/>
+                                    <ComboBoxItem Content="30"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                    </Expander>
+
+
+
+                    <ListView   ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.CanContentScroll="False" Grid.Row="1" Grid.ColumnSpan="3" Margin="10" Name="vacListView">
+                            <ListView.View>
+                                <GridView >
+                                    <GridViewColumn Header="Title" Width="150"  DisplayMemberBinding="{Binding Title}" />
+                                    <GridViewColumn Header="Company" Width="150"  DisplayMemberBinding="{Binding Company}" />
+                                    <GridViewColumn Header="Category" Width="100"  DisplayMemberBinding="{Binding Сategory}"/>
+                                    <GridViewColumn Header="Location" Width="100"  DisplayMemberBinding="{Binding Location}"/>
+                                    <GridViewColumn Header="Salary" Width="100"  DisplayMemberBinding="{Binding Salary}"/>
+
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+
+
+                   
+                   
                 </Grid>
             </TabItem>
-            <TabItem Header="Result">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </TabItem>
+           
         </TabControl>
     </Grid>
 </controls:MetroWindow>

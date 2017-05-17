@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="562aa40a-8e9e-4ee8-9643-523af7a656cb" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://andriyshala-001-site1.gtempurl.com/ParseService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ParseService.wsdl" MetadataType="Wsdl" ID="1162dcad-f146-438b-a211-78613cf2cac8" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?wsdl" />
+    <MetadataFile FileName="ParseService.xsd" MetadataType="Schema" ID="c4d7ae1c-50b8-47b2-8da4-5a52c97e5589" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ParseService1.xsd" MetadataType="Schema" ID="1d1e0c21-02f9-4cf9-a2ac-1774cfe66a8e" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?xsd=xsd3" />
+    <MetadataFile FileName="ParseService2.xsd" MetadataType="Schema" ID="1cb519f9-888b-4e13-b056-4a02c888fd81" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ParseService3.xsd" MetadataType="Schema" ID="98743707-be88-407a-bd10-1c67c0890386" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ParseService.disco" MetadataType="Disco" ID="2635bbb5-4479-4adb-8412-e9774e318828" SourceId="1" SourceUrl="http://andriyshala-001-site1.gtempurl.com/ParseService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
