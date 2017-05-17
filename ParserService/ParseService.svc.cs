@@ -38,12 +38,11 @@ namespace ParserService
         private void UpdateSite(Parser site)
         {
 
-            foreach (var vac in Category.categoryCollection)
-            {
-
+            for(int i=12;i<Category.categoryCollection.Count();i++)
+            { 
                 try
                 {
-                    foreach (var items in site.ParseByCategory(vac))
+                    foreach (var items in site.ParseByCategory(Category.categoryCollection[i]))
                     {
                         try
                         {
