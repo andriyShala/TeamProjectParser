@@ -25,7 +25,10 @@ namespace ClientUI
             InitializeComponent();
         }
 
-
+        /// <summary>
+        /// Конструктор окна для отображения 
+        /// </summary>
+        /// <param name="vac"></param>
         public InfoWindow(ServiceReference1.Vacancy vac)
         {
             InitializeComponent();
@@ -60,7 +63,7 @@ namespace ClientUI
 
             }
         }
-
+        
         private void VacancyHrefB_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 

@@ -31,7 +31,9 @@ namespace ClientUI
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         private static object locks = new object();
-       
+       /// <summary>
+       /// поиск вакансий по фильтрам
+       /// </summary>
         private void SerchVacancy()
         {
             Search = true;
@@ -82,6 +84,10 @@ namespace ClientUI
             Search = false;
 
         }
+        /// <summary>
+        /// Инициализация окна
+        /// (загрузка єлементов с сервиса)
+        /// </summary>
         private void LoadWindow()
         {
             foreach (var item in client.GetSites())
@@ -114,7 +120,10 @@ namespace ClientUI
             Task.Run(() => LoadWindow());
             ThreadPool.SetMaxThreads(5, 5);
         }
-
+        /// <summary>
+        /// Таймер поиска
+        /// </summary>
+        /// <param name="obj"></param>
         private static void Timer(object obj)
         {
             MainWindow main = obj as MainWindow;
@@ -142,7 +151,11 @@ namespace ClientUI
         }
 
 
-
+        /// <summary>
+        /// Обработка двойного клика в listview
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
         {
             InfoWindow info = new InfoWindow(vacListView.SelectedItem as ServiceReference1.Vacancy);
