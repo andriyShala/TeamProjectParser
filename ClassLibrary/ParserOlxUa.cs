@@ -170,7 +170,7 @@ namespace ClassLibrary
                     foreach (var node in doc.DocumentNode.SelectNodes("//table//tbody//tr[@class='wrap']//td//article"))
                     {
 
-                        Vacancy newVacancy = null; 
+                        Vacancy newVacancy = null;
                         try
                         {
                             newVacancy = new Vacancy() { ParseSiteId = id };
@@ -208,7 +208,7 @@ namespace ClassLibrary
                     }
                     page++;
                     url = null;
-                    while(url==null)
+                    while (url == null)
                     {
                         try
                         {
@@ -235,7 +235,7 @@ namespace ClassLibrary
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
         {
             List<Vacancy> tempList = new List<Vacancy>();
-
+            int countFive = 0;
             int page = 1;
             string url = "";
             try
@@ -265,8 +265,14 @@ namespace ClassLibrary
                             string title = node.SelectSingleNode("div[1]//h3").InnerText.Trim();
                             newVacancy.Title = title;
                             string link = node.SelectSingleNode("div[1]//h3//a").Attributes["href"].Value;
-                            if (getTime(link) < date)
+                            if ((getTime(link) < date) && countFive >= 5)
+                                return tempList;
+                            else if (getTime(link) < date)
+                            {
+                                countFive++;
                                 continue;
+                            }
+
                             newVacancy.VacancyHref = link;
                             getInnerInformation(link, ref newVacancy);
                         }
@@ -291,6 +297,7 @@ namespace ClassLibrary
                         }
 
                         tempList.Add(newVacancy);
+                        countFive++;
                     }
                     page++;
                     url = "https://www.olx.ua/rabota/" + categoryCollection[keyCategory] + "/?page=" + page;
