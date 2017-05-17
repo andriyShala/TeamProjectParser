@@ -18,6 +18,7 @@ using MahApps;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
+using System.Threading;
 
 
 namespace ClientUI
@@ -25,111 +26,128 @@ namespace ClientUI
     /// <summary>
     /// MahApps.Metro.Controls.MetroWindow
     /// </summary>
+    /// 
+
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
+        private static object locks = new object();
+       
+        private void SerchVacancy()
+        {
+            Search = true;
+            ThreadPool.QueueUserWorkItem(Timer, this);
+
+            this.Invoke(new Action(() => vacListView.Items.Clear()));
+            string cat = null;
+            string city = null;
+            string site = null;
+            string stringSearch = null;
+            int date = 1;
+            this.Invoke((delegate
+            {
+                if (categoryChooseCB.Text != "All")
+                    cat = categoryChooseCB.Text;
+                if (regionChooseCB.SelectedItem.ToString() != "All")
+                    city = regionChooseCB.Text;
+                site = siteChooseCB.Text;
+                if (searchBox.Text != string.Empty)
+                {
+                    stringSearch = searchBox.Text;
+                }
+                date = Convert.ToInt32(dateBox.Text);
+            }));
+
+           
+                if (stringSearch == null)
+                {
+
+                    vacancies = client.GetVacancies(cat, city, site,
+                        date);
+                }
+                else
+                {
+                    vacancies = client.GetVacanciesBySearch(stringSearch, cat, city,
+                       site, date);
+
+                }
+                this.Invoke((delegate
+                {
+                    foreach (var item in vacancies)
+                    {
+
+                        vacListView.Items.Add(item);
+                    }
+                }));
+
+            Search = false;
+
+        }
+        private void LoadWindow()
+        {
+            foreach (var item in client.GetSites())
+            {
+                this.Invoke(new Action(() => siteChooseCB.Items.Add(item)));
+            }
+            this.Invoke(new Action(() => siteChooseCB.SelectedIndex = 0));
+            this.Invoke(new Action(() => categoryChooseCB.Items.Add("All")));
+            foreach (var item in client.GetCategory())
+            {
+                this.Invoke(new Action(() => categoryChooseCB.Items.Add(item)));
+            }
+
+            this.Invoke(new Action(() => categoryChooseCB.SelectedIndex = 0));
+            this.Invoke(new Action(() => regionChooseCB.Items.Add("All")));
+            foreach (var item in client.GetCity())
+            {
+                this.Invoke(new Action(() => regionChooseCB.Items.Add(item)));
+            }
+            this.Invoke(new Action(() => regionChooseCB.SelectedIndex = 0));
+            this.Invoke(new Action(() => dateBox.SelectedIndex = 0));
+        }
         private ServiceReference1.ParseServiceClient client;
         ServiceReference1.Vacancy[] vacancies;
-
+        private static bool Search = false;
         public MainWindow()
         {
             InitializeComponent();
-           
             client = new ParseServiceClient();
-            var sites = client.GetSites();
-            foreach (var item in sites)
-            {
-                siteChooseCB.Items.Add(item);
-            }
-
-            siteChooseCB.SelectedIndex = 0;
-            var category = client.GetCategory();
-            categoryChooseCB.Items.Add("All");
-            foreach (var item in category)
-            {
-                categoryChooseCB.Items.Add(item);
-            }
-
-            categoryChooseCB.SelectedIndex = 0;
-            var cities = client.GetCity();
-            regionChooseCB.Items.Add("All");
-            foreach (var item in cities)
-            {
-                regionChooseCB.Items.Add(item);
-            }
-            regionChooseCB.SelectedIndex = 0;
-            dateBox.SelectedIndex = 0;
-            {
-                //ServiceReference1.Vacancy vac = new ServiceReference1.Vacancy();
-                //List<ServiceReference1.Vacancy> list = new List<ServiceReference1.Vacancy>();
-                //vac.Title = "Тренер по продажам / Гуру телефонных продаж";
-                //vac.Company = "Смарт Системс Девелопмент";
-                //vac.Сategory = "HR";
-                //vac.Location = "Львов";
-                //vac.ContactPerson = "Александр Матвийчук";
-                //vac.PhoneNumber = "380931371777";
-                //vac.Description =
-                //    "Компания Smart System Development ищет БОГА продаж, который продаст даже скрипт нашим менеджерам!";
-                //vac.Salary = "20 000 грн";
-                //vac.Experience = "Наявність досвіду роботи із документами та конфіденційною інформацією буде перевагою";
-              
-                //vac.VacancyHref = "https://rabota.ua/company3221854/vacancy6708659";
-                //vac.CompanyWebSite = "https://rabota.ua/company3221854#3221854";
-                //vac.PublicationDate = DateTime.Now;
-
-                //list.Add(vac);
-                //vacListView.ItemsSource = list;
-
-            }
-
+            Task.Run(() => LoadWindow());
+            ThreadPool.SetMaxThreads(5, 5);
         }
 
-
+        private static void Timer(object obj)
+        {
+            MainWindow main = obj as MainWindow;
+            int sec = 0;
+            while (Search == true)
+            {
+                Thread.Sleep(1000);
+                main.Invoke(new Action(() => main.Title = "Search - " + sec++));
+            }
+            main.Invoke(new Action(() => main.Title = "Vacantion Parser"));
+        }
 
         private void SearchBut_OnClick(object sender, RoutedEventArgs e)
         {
-            vacListView.ItemsSource = null;
-           
-            string cat = null;
-            if (categoryChooseCB.Text != "All")
-                cat = categoryChooseCB.Text;
-
-            string city = null;
-            if (regionChooseCB.SelectedItem.ToString() != "All")
-                city = regionChooseCB.Text;
-
-
-            if (String.IsNullOrEmpty(searchBox.Text))
+            lock (locks)
             {
-
-                vacancies = client.GetVacancies(cat, city, siteChooseCB.Text,
-                    Convert.ToInt32(dateBox.Text));
-
-              
+                Task.Run(() => SerchVacancy());
             }
-            else
-            {
-                vacancies = client.GetVacanciesBySearch(searchBox.Text, cat, city,
-                    siteChooseCB.Text, Convert.ToInt32(dateBox.Text));
-               
-            }
-            vacListView.ItemsSource = vacancies;
         }
-
-     
 
         private void VacanciesListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
-         
+
+
         }
 
-      
+
 
         private void EventSetter_OnHandler(object sender, MouseButtonEventArgs e)
         {
-           InfoWindow info = new InfoWindow(vacListView.SelectedItem as ServiceReference1.Vacancy);
-           
-           info.Show();
+            InfoWindow info = new InfoWindow(vacListView.SelectedItem as ServiceReference1.Vacancy);
+
+            info.Show();
             info.Activate();
             info.Focus();
         }
