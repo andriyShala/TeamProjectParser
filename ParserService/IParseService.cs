@@ -13,9 +13,9 @@ namespace ParserService
     {
 
         [OperationContract]
-        List<Vacancy> GetVacancies(string Category, string City, string Site,int Day);
+        IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site,int Day);
         [OperationContract]
-        List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site,int Day);
+        IEnumerable<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site,int Day);
         [OperationContract]
         List<string> GetSites();
         [OperationContract]

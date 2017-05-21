@@ -112,30 +112,12 @@ namespace ClassLibrary
         private Vacancy GetContentFromHttp(string href, Vacancy vacancy)
         {
 
-            HtmlWeb web = new HtmlWeb();
             HtmlDocument document=null;
-            while (document == null)
-            {
-                try
-                {
-                    document = web.Load(href);
-                }
-                catch
-                {
-
-                }
-           }
+                    document = GetDokumentByURL(href);
             HtmlNode[] links = null;
-            while(links==null)
-            {
-                try
-                {
+          
                     links = document.DocumentNode.SelectNodes("//div[@class='b-vacancy-full js-item_full']").ToArray();
-                }
-                catch 
-                {
-                }
-            }
+      
             foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
             {
                 try
@@ -304,10 +286,45 @@ namespace ClassLibrary
                 return null;
             }
         }
+        private HtmlDocument GetDokumentByURL(string url)
+        {
 
+            while (true)
+            {
+                try
+                {
+                    return web.Load(url);
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+        }
+        private HtmlNode[] GetHodeByUrl(string url)
+        {
+            HtmlDocument document = GetDokumentByURL(url);
+            try
+            {
+                return document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+            }
+            catch
+            {
+                while(true)
+                {
+                    try
+                    {
+                       return GetDokumentByURL(url).DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+        }
         public override IEnumerable<Vacancy> ParseByCategory(string keyCategory)
         {
-            List<Vacancy> tempList = new List<Vacancy>();
+           
 
             string valuecategory = null;
             try
@@ -316,7 +333,7 @@ namespace ClassLibrary
             }
             catch
             {
-                return null;
+                yield break;
             }
             string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
@@ -326,46 +343,30 @@ namespace ClassLibrary
                 additionalPeriod = "/page-" + i;
                 HtmlDocument document = null;
                 HtmlNode[] links = null;
-                while(document==null)
+                try
                 {
-                    try
-                    {
-                        document = web.Load(href + additionalPeriod);
-                    }
-                    catch 
-                    {
-                    }
+                    document = new HtmlWeb().Load(href + additionalPeriod);
                 }
-                while (links == null)
+                catch {
+                document =GetDokumentByURL(href + additionalPeriod);
+                }
+                try
                 {
-                    try
-                    {
-                        links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
-                    }
-                    catch 
-                    {
-                        
-                    }
+                    links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                }
+                catch
+                {
+                    links = GetHodeByUrl(href);
                 }
                 foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
                     Vacancy tempVacancy = null;
                     if (item != null)
                     {
-                        while (tempVacancy == null)
-                        {
-                            try
-                            {
-                                tempVacancy = GetVacancyByNode(item, keyCategory);
-                            }
-                            catch
-                            {
-
-                            }
-                        }
+                     tempVacancy = GetVacancyByNode(item, keyCategory);
                     }
                     if (tempVacancy != null && tempVacancy.Title != null)
-                        tempList.Add(tempVacancy);
+                        yield return tempVacancy;
                     else
                     {
                         continue;
@@ -374,7 +375,7 @@ namespace ClassLibrary
                 }
 
             }
-           return tempList;
+            yield break;
         }
 
         public override IEnumerable<Vacancy> ParseByDate(string keyCategory, DateTime date)
@@ -387,7 +388,7 @@ namespace ClassLibrary
             }
             catch
             {
-                return null;
+                yield break;
             }
             string href = "https://jobs.ua/vacancy/" + valuecategory;
             string additionalPeriod = "";
@@ -444,15 +445,15 @@ namespace ClassLibrary
                     {
                         if (i != 1)
                         {
-                            return null;
+                            yield break;
                         }
                     }
                     else
-                        tempList.Add(tempVacancy);
+                       yield return tempVacancy;
                 }
                
             }
-            return tempList;
+            yield break;
         }
 
 

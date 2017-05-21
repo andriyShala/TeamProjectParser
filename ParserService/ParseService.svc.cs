@@ -20,7 +20,7 @@ namespace ParserService
     public class ParseService : IParseService
     {
         private const int Timeout = 10800000;
-        List<Parser> parseSites = new List<Parser>() { new RabotaUAParser(325)/*,new ParserOlxUa(213),new ParseJobsUa(532),new RiaParser(555)*/};
+        List<Parser> parseSites = new List<Parser>() { new RabotaUAParser(325), new ParserOlxUa(213), new ParseJobsUa(532), new RiaParser(555) };
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -158,7 +158,7 @@ namespace ParserService
             }
             return rangedata;
         }
-        public List<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
+        public IEnumerable<Vacancy> GetVacancies(string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
@@ -278,7 +278,7 @@ namespace ParserService
 
         }
 
-        public List<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
+        public IEnumerable<Vacancy> GetVacanciesBySearch(string NameVacancy, string Category, string City, string Site, int Day)
         {
             DateTime rangedata = ConvertIntToDate(Day);
 
