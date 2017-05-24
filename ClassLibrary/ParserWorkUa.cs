@@ -148,6 +148,8 @@ namespace ClassLibrary
                     foreach (var item in cells)
                     {
                         Vacancy vacancy = new Vacancy();
+                        vacancy.ParseSiteId = this.siteId;
+                        vacancy.PublicationDate=DateTime.Today;
                         var link = await BrowsingContext.New(config).OpenAsync(site + item.GetAttribute("href"));
 
                         vacancy.VacancyHref = site + item.GetAttribute("href");

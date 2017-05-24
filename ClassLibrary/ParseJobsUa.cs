@@ -398,27 +398,21 @@ namespace ClassLibrary
                 additionalPeriod = "/page-" + i;
                 HtmlDocument document = null;
                 HtmlNode[] links = null;
-                while (document == null)
+                try
                 {
-                    try
-                    {
-                        document = web.Load(href + additionalPeriod);
-                    }
-                    catch
-                    {
-                    }
+                    document = new HtmlWeb().Load(href + additionalPeriod);
                 }
-
-                while (links == null)
+                catch
                 {
-                    try
-                    {
-                        links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
-                    }
-                    catch
-                    {
-
-                    }
+                    document = GetDokumentByURL(href + additionalPeriod);
+                }
+                try
+                {
+                    links = document.DocumentNode.SelectNodes("//ul[@class='b-vacancy__list js-items_block']").ToArray();
+                }
+                catch
+                {
+                    links = GetHodeByUrl(href);
                 }
                 foreach (var item in links[0].ChildNodes.Where(x => x.NodeType != HtmlNodeType.Text))
                 {
@@ -429,17 +423,19 @@ namespace ClassLibrary
                     Vacancy tempVacancy = null;
                     if (item != null)
                     {
-                        while (tempVacancy == null)
-                        {
+                        
                             try
                             {
                                 tempVacancy = GetVacancyByNode(item, keyCategory);
                             }
                             catch
+                         {
+                            while (tempVacancy == null)
                             {
-
+                                tempVacancy = GetVacancyByNode(item, keyCategory);
                             }
                         }
+                       
                     }
                     if (tempVacancy.PublicationDate != date)
                     {

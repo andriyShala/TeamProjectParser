@@ -26,8 +26,7 @@ namespace ParserService
         void Start();
         [OperationContract]
          void StartUpdateDataDate();
-        [OperationContract]
-        void StartParser(int idSite, string Category);
+       
 
     }
 }

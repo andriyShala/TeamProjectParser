@@ -44,6 +44,12 @@
   <wsdl:message name="IParseService_Start_OutputMessage">
     <wsdl:part name="parameters" element="tns:StartResponse" />
   </wsdl:message>
+  <wsdl:message name="IParseService_StartUpdateDataDate_InputMessage">
+    <wsdl:part name="parameters" element="tns:StartUpdateDataDate" />
+  </wsdl:message>
+  <wsdl:message name="IParseService_StartUpdateDataDate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StartUpdateDataDateResponse" />
+  </wsdl:message>
   <wsdl:portType name="IParseService">
     <wsdl:operation name="GetVacancies">
       <wsdl:input wsaw:Action="http://tempuri.org/IParseService/GetVacancies" message="tns:IParseService_GetVacancies_InputMessage" />
@@ -68,6 +74,10 @@
     <wsdl:operation name="Start">
       <wsdl:input wsaw:Action="http://tempuri.org/IParseService/Start" message="tns:IParseService_Start_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IParseService/StartResponse" message="tns:IParseService_Start_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StartUpdateDataDate">
+      <wsdl:input wsaw:Action="http://tempuri.org/IParseService/StartUpdateDataDate" message="tns:IParseService_StartUpdateDataDate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IParseService/StartUpdateDataDateResponse" message="tns:IParseService_StartUpdateDataDate_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IParseService" type="tns:IParseService">
@@ -119,6 +129,15 @@
     </wsdl:operation>
     <wsdl:operation name="Start">
       <soap:operation soapAction="http://tempuri.org/IParseService/Start" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartUpdateDataDate">
+      <soap:operation soapAction="http://tempuri.org/IParseService/StartUpdateDataDate" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

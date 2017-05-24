@@ -1,14 +1,10 @@
-﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using HtmlAgilityPack;
+using System.Collections.Generic;
 
 namespace ClassLibrary
 {
-   
     public class RabotaUAParser : Parser
     {
         const string webSite = "https://rabota.ua/";
@@ -74,20 +70,24 @@ namespace ClassLibrary
         }
         private int GetNumberOfPages(string category)
         {
-            HtmlNodeCollection itemNode = new HtmlWeb().Load(category).DocumentNode.SelectSingleNode("//dl[@class='f-text-royal-blue fd-merchant f-pagination']").ChildNodes;
-            foreach (var childNode in itemNode)
+            try
             {
-                if (childNode == itemNode[itemNode.Count - 2])
+                HtmlNodeCollection itemNode = new HtmlWeb().Load(category).DocumentNode.SelectSingleNode("//dl[@class='f-text-royal-blue fd-merchant f-pagination']").ChildNodes;
+                foreach (var childNode in itemNode)
                 {
-                    return Convert.ToInt32(childNode.LastChild.InnerText);
+                    if (childNode == itemNode[itemNode.Count - 2])
+                    {
+                        return Convert.ToInt32(childNode.LastChild.InnerText);
+                    }
                 }
+                return 0;
             }
-            return 0;
+            catch { return 0; }
         }
 
         private void ParseVacancyHeader(HtmlNode node, ref Vacancy vacancy, DateTime date)
         {
-            if (node != null && node.Descendants("div").Where(x => x.Attributes["class"].Value == "fd-f1").FirstOrDefault().ChildNodes != null)
+            try
             {
                 var items = node.Descendants("div").Where(x => x.Attributes["class"].Value == "fd-f1").FirstOrDefault().ChildNodes;
                 if (node.Descendants("p").Where(x => x.Attributes["class"].Value == "f-vacancylist-agotime f-text-light-gray fd-craftsmen").FirstOrDefault() != null)
@@ -110,7 +110,7 @@ namespace ClassLibrary
                         }
                         else if (itemNode.Attributes["class"].Value == "f-vacancylist-companyname fd-merchant f-text-dark-bluegray")
                         {
-                            vacancy.Company = itemNode.InnerText;
+                            vacancy.Company = itemNode.InnerText.Trim();
                         }
                         else if (itemNode.Attributes["class"].Value == "f-vacancylist-characs-block fd-f-left-middle")
                         {
@@ -120,11 +120,11 @@ namespace ClassLibrary
                                 {
                                     if (nextChildNode.Attributes["class"].Value == "fd-merchant")
                                     {
-                                        vacancy.Location = nextChildNode.InnerText;
+                                        vacancy.Location = nextChildNode.InnerText.Split(',')[0].Trim();
                                     }
                                     else if (nextChildNode.Attributes["class"].Value == "fd-beefy-soldier -price")
                                     {
-                                        vacancy.Salary = nextChildNode.InnerText;
+                                        vacancy.Salary = nextChildNode.InnerText.Trim();
                                     }
                                 }
                             }
@@ -133,93 +133,96 @@ namespace ClassLibrary
                 }
                 ParseVacancy(node, ref vacancy, date);
             }
+            catch { ParseVacancy(node, ref vacancy, date); }
         }
         private Vacancy ParseVacancy(HtmlNode node, ref Vacancy vacancy, DateTime date)
         {
-            HtmlDocument page = new HtmlWeb().Load(vacancy.VacancyHref);
-            vacancy.PublicationDate = Convert.ToDateTime(page.DocumentNode.SelectSingleNode("//meta[@property='article:published_time']").Attributes["content"].Value.Substring(0, 10));
+            try
+            {
+                HtmlDocument page = new HtmlWeb().Load(vacancy.VacancyHref);
+                vacancy.PublicationDate = Convert.ToDateTime(page.DocumentNode.SelectSingleNode("//meta[@property='article:published_time']").Attributes["content"].Value.Substring(0, 10));
 
-            if (date != new DateTime())
-            {
-                if (vacancy.PublicationDate < date)
+                if (date != new DateTime())
                 {
-                    checkDate = true;
-                    return vacancy = null;
+                    if (vacancy.PublicationDate < date)
+                    {
+                        checkDate = true;
+                        return vacancy = null;
+                    }
                 }
-            }
-            if (page.DocumentNode.SelectNodes("//div[@class='f-vacancy-inner-wrapper']") != null)
-            {
-                ParceFirstTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='f-vacancy-inner-wrapper']"), ref vacancy);
-                if (page.DocumentNode.SelectSingleNode("//div[@class='f-vacancy-description']").ChildNodes["div"].ChildNodes["div"] != null)
+                if (page.DocumentNode.SelectNodes("//div[@class='f-vacancy-inner-wrapper']") != null)
                 {
+                    ParceFirstTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='f-vacancy-inner-wrapper']"), ref vacancy);
                     ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='f-vacancy-description']").ChildNodes["div"].ChildNodes["div"], ref vacancy);
                 }
-            }
-            else if (page.DocumentNode.SelectNodes("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[3]//td//div[1]") != null)
-            {
-                ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[3]//td//div[1]"), ref vacancy);
-                if (page.DocumentNode.SelectSingleNode("//div[@class='descr']") != null)
+                else if (page.DocumentNode.SelectNodes("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[3]//td//div[1]") != null)
+                {
+                    ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[3]//td//div[1]"), ref vacancy);
+                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='descr']"), ref vacancy);
+                }
+                else if (page.DocumentNode.SelectNodes("//div[@class='descr']") != null)
                 {
                     ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='descr']"), ref vacancy);
                 }
-            }
-            else if (page.DocumentNode.SelectNodes("//div[@class='descr']") != null)
-            {
-                ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='descr']"), ref vacancy);
-            }
-            else if (page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//div//table//tr//td[2]//div") != null)
-            {
-                ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//div//table//tr//td[2]//div"), ref vacancy);
-            }
-            else if (page.DocumentNode.SelectSingleNode("//*[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[2]//td//table//tbody//tr//td[2]//div[2]") != null)
-            {
-                ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//*[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[2]//td//table//tbody//tr//td[2]//div[2]"), ref vacancy);
-            }
-            else if (page.DocumentNode.SelectNodes("//div[@class='d_des']") != null)
-            {
-                if (page.DocumentNode.SelectNodes("//div[@class='d-items']") != null && page.DocumentNode.SelectNodes("//div[@class='d_des']").FirstOrDefault().LastChild.Name == "div")
+                else if (page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//div//table//tr//td[2]//div") != null)
                 {
-                    ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
-                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']").LastChild, ref vacancy);
+                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//div//table//tr//td[2]//div"), ref vacancy);
                 }
-                else if (page.DocumentNode.SelectNodes("//div[@class='d-items']") != null)
+                else if (page.DocumentNode.SelectSingleNode("//*[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[2]//td//table//tbody//tr//td[2]//div[2]") != null)
                 {
-                    ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
-                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//*[@id='content_vcVwPopup_VacancyViewInner1_pnlBody']//span//table//tbody//tr[2]//td//table//tbody//tr//td[2]//div[2]"), ref vacancy);
                 }
+                else if (page.DocumentNode.SelectNodes("//div[@class='d_des']") != null)
+                {
+                    if (page.DocumentNode.SelectNodes("//div[@class='d-items']") != null && page.DocumentNode.SelectNodes("//div[@class='d_des']").FirstOrDefault().LastChild.Name == "div")
+                    {
+                        ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                        ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']").LastChild, ref vacancy);
+                    }
+                    else if (page.DocumentNode.SelectNodes("//div[@class='d-items']") != null)
+                    {
+                        ParseThirdTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                        ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                    }
 
-                else if (page.DocumentNode.SelectNodes("//div[@class='d_des_in']") != null)
-                {
-                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des_in']"), ref vacancy);
+                    else if (page.DocumentNode.SelectNodes("//div[@class='d_des_in']") != null)
+                    {
+                        ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des_in']"), ref vacancy);
+                    }
+                    else
+                    {
+                        ParseSecondTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                        ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
+                    }
                 }
-                else
-                {
-                    ParseSecondTemplateVacancyParams(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
-                    ParseVacancyDescription(page.DocumentNode.SelectSingleNode("//div[@class='d_des']"), ref vacancy);
-                }
+                return vacancy;
             }
-            return vacancy;
+            catch { return vacancy; }
         }
 
         private void ParceFirstTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
-            foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
+            try
             {
-                switch (itemNode.FirstChild.InnerText)
+                foreach (var itemNode in node.SelectSingleNode("//ul[@class='fd-thin-farmer']").ChildNodes)
                 {
-                    case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText; break;
-                    case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText; break;
-                    case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText; break;
+                    switch (itemNode.FirstChild.InnerText)
+                    {
+                        case "Контакт:": vacancy.ContactPerson = itemNode.LastChild.InnerText; break;
+                        case "Телефон:": vacancy.PhoneNumber = itemNode.LastChild.LastChild.InnerText; break;
+                        case "Сайт:": vacancy.CompanyWebSite = itemNode.LastChild.InnerText; break;
+                    }
                 }
-            }
 
-            foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
-            {
-                if (itemNode.Attributes["title"].Value == "Вид занятости")
+                foreach (var itemNode in node.SelectSingleNode("//div[@class='f-additional-params']").ChildNodes)
                 {
-                    vacancy.TypeOfEmployment = itemNode.InnerText;
+                    if (itemNode.Attributes["title"].Value == "Вид занятости")
+                    {
+                        vacancy.TypeOfEmployment = itemNode.InnerText;
+                    }
                 }
             }
+            catch { }
         }
         private void ParseSecondTemplateVacancyParams(HtmlNode node, ref Vacancy vacancy)
         {
@@ -235,23 +238,23 @@ namespace ClassLibrary
                             {
                                 if (childNode.InnerText.Contains("Сайт"))
                                 {
-                                    vacancy.CompanyWebSite = childNode.InnerText;
+                                    vacancy.CompanyWebSite = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Вид занятости"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Контактное лицо"))
                                 {
-                                    vacancy.ContactPerson = childNode.InnerText;
+                                    vacancy.ContactPerson = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Опыт работы"))
                                 {
-                                    vacancy.Experience = childNode.InnerText;
+                                    vacancy.Experience = childNode.InnerText.Trim();
                                 }
                                 else if (childNode.InnerText.Contains("Телефон"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.InnerText.Trim();
                                 }
                             }
                         }
@@ -274,15 +277,15 @@ namespace ClassLibrary
                             {
                                 if (childNode.FirstChild.InnerText.Contains("Контактное лицо") || childNode.FirstChild.InnerText.Contains("Контактна особа") || childNode.FirstChild.InnerText.Contains("Contact person"))
                                 {
-                                    vacancy.ContactPerson = childNode.LastChild.InnerText;
+                                    vacancy.ContactPerson = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Контактный телефон") || childNode.FirstChild.InnerText.Contains("Контактний телефон") || childNode.FirstChild.InnerText.Contains("Phone"))
                                 {
-                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText;
+                                    vacancy.PhoneNumber = childNode.LastChild.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Вид занятости") || childNode.FirstChild.InnerText.Contains("Вид занятості") || childNode.FirstChild.InnerText.Contains("Job Type"))
                                 {
-                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText;
+                                    vacancy.TypeOfEmployment = childNode.LastChild.InnerText.Trim();
                                 }
                                 else if (childNode.FirstChild.InnerText.Contains("Сайт") || childNode.FirstChild.InnerText.Contains("Website"))
                                 {
@@ -312,12 +315,12 @@ namespace ClassLibrary
                         {
                             foreach (var childNode in itemNode.ChildNodes)
                             {
-                                vacancy.Description += childNode.InnerText + Environment.NewLine;
+                                vacancy.Description += childNode.InnerText.Trim() + Environment.NewLine;
                             }
                         }
                         else
                         {
-                            vacancy.Description += itemNode.InnerText + Environment.NewLine;
+                            vacancy.Description += itemNode.InnerText.Trim() + Environment.NewLine;
                         }
                     }
                 }
@@ -340,7 +343,7 @@ namespace ClassLibrary
                     {
                         if (itemNode != vacancyCollection[vacancyCollection.Count - 1])
                         {
-                            Vacancy vacancy = new Vacancy { Сategory = item.Key };
+                            Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                             ParseVacancyHeader(itemNode, ref vacancy, new DateTime());
                             yield return vacancy;
                         }
@@ -370,7 +373,7 @@ namespace ClassLibrary
                             }
                             if (!checkDate)
                             {
-                                Vacancy vacancy = new Vacancy { Сategory = item.Key };
+                                Vacancy vacancy = new Vacancy { ParseSiteId = webSiteId, Сategory = item.Key };
                                 ParseVacancyHeader(itemNode, ref vacancy, date);
                                 if (vacancy != null)
                                 {
@@ -383,7 +386,7 @@ namespace ClassLibrary
                             }
                             else
                             {
-                                yield break;
+                                break;
                             }
                         }
                     }
@@ -391,6 +394,6 @@ namespace ClassLibrary
             }
         }
 
-        
+
     }
 }

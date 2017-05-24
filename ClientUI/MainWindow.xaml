@@ -25,8 +25,8 @@
 
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-
-                    <Expander IsExpanded="True"  Padding="5" Header="Search" Grid.Row="0" Grid.ColumnSpan="3">
+                    <controls:ProgressRing x:Name="ProgressRing" Grid.ColumnSpan="3"></controls:ProgressRing>
+                    <Expander  Visibility="Collapsed" x:Name="Expander" IsExpanded="True"  Padding="5" Header="Search" Grid.Row="0" Grid.ColumnSpan="3">
 
                         <Grid Margin="10,0,0,0">
                             <Grid.RowDefinitions>
@@ -40,9 +40,9 @@
 
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <StackPanel Margin="2" Grid.ColumnSpan="2" Grid.Row="0">
+                            <StackPanel  Margin="2" Grid.ColumnSpan="2" Grid.Row="0">
 
-                                <TextBox x:Name="searchBox"></TextBox>
+                                <TextBox  x:Name="searchBox"></TextBox>
                             </StackPanel>
 
                             <Button x:Name="searchBut" Click="SearchBut_OnClick" Grid.Column="2"  Style="{DynamicResource MetroCircleButtonStyle}">
@@ -64,7 +64,7 @@
                             <StackPanel  Margin="2" Grid.Column="0" Grid.Row="2">
                                 <Label >Date:</Label>
                                 <ComboBox x:Name="dateBox">
-                                    <ComboBoxItem Content="1"/>
+
                                     <ComboBoxItem Content="7"/>
                                     <ComboBoxItem Content="14"/>
                                     <ComboBoxItem Content="30"/>
@@ -75,32 +75,33 @@
                     </Expander>
 
 
-
+                    <controls:ProgressRing  Grid.Row="1" Grid.ColumnSpan="3" x:Name="ProgressRing1"></controls:ProgressRing>
                     <ListView   ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="False" Grid.Row="1" Grid.ColumnSpan="3" Margin="10" Name="vacListView">
-                            <ListView.View>
-                                <GridView >
-                                    <GridViewColumn Header="Title" Width="150"  DisplayMemberBinding="{Binding Title}" />
-                                    <GridViewColumn Header="Company" Width="150"  DisplayMemberBinding="{Binding Company}" />
-                                    <GridViewColumn Header="Category" Width="100"  DisplayMemberBinding="{Binding Сategory}"/>
-                                    <GridViewColumn Header="Location" Width="100"  DisplayMemberBinding="{Binding Location}"/>
-                                    <GridViewColumn Header="Salary" Width="100"  DisplayMemberBinding="{Binding Salary}"/>
+                        <ListView.View>
+                            <GridView >
+                                <GridViewColumn Header="Title" Width="150"  DisplayMemberBinding="{Binding Title}" />
+                                <GridViewColumn Header="Company" Width="150"  DisplayMemberBinding="{Binding Company}" />
+                                <GridViewColumn Header="Category" Width="100"  DisplayMemberBinding="{Binding Сategory}"/>
+                                <GridViewColumn Header="Location" Width="100"  DisplayMemberBinding="{Binding Location}"/>
+                                <GridViewColumn Header="Salary" Width="100"  DisplayMemberBinding="{Binding Salary}"/>
+                                <GridViewColumn Header="Date" Width="100"  DisplayMemberBinding="{Binding PublicationDate}"/>
 
-                                </GridView>
-                            </ListView.View>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="EventSetter_OnHandler"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
 
 
-                   
-                   
+
+
                 </Grid>
             </TabItem>
-           
+
         </TabControl>
     </Grid>
 </controls:MetroWindow>

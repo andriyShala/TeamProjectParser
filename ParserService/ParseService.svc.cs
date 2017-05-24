@@ -19,8 +19,9 @@ namespace ParserService
   )]
     public class ParseService : IParseService
     {
-        private const int Timeout = 10800000;
-        List<Parser> parseSites = new List<Parser>() { new RabotaUAParser(325), new ParserOlxUa(213), new ParseJobsUa(532), new RiaParser(555) };
+      
+        private const int Timeout = 10800000; //таймаут оновлення даних
+        List<Parser> parseSites = new List<Parser>() { new RabotaUAParser(325), new ParserOlxUa(213), new ParseJobsUa(532), new RiaParser(555),new ParserWorkUa(222)};
         DBmodel model = new DBmodel();
         private static object lockthread = new object();
 
@@ -38,7 +39,7 @@ namespace ParserService
         private void UpdateSite(Parser site)
         {
 
-            for(int i=12;i<Category.categoryCollection.Count();i++)
+            for(int i=0;i<Category.categoryCollection.Count();i++)
             { 
                 try
                 {
@@ -91,6 +92,7 @@ namespace ParserService
                         {
                             lock (lockthread)
                             {
+                                
                                 model.Vacancies.Remove(items);
                                 model.SaveChanges();
                             }
@@ -428,38 +430,23 @@ namespace ParserService
                 Task.Run(() => UpdateSite(item));
             }
         }
+        /// <summary>
+        /// Запуск парсингу всіх сайтів
+        /// </summary>
         public void Start()
         {
             Task.Run(() => UpdateAll());
         }
-        public void StartParser(int idSite,string Category)
-        {
-            Task.Run(() => ParserIdSite(idSite, Category));
-        }
+
+       
+        /// <summary>
+        /// Запуск Оновлення даних на сервері
+        /// </summary>
         public void StartUpdateDataDate()
         {
-            Task.Run(() => UpdateAll());
+            Task.Run(() => UpdateDate());
         }
-        private void ParserIdSite(int id,string Category)
-        {
-            try
-            {
-                var site = model.Sites.Where(x => x.id == id).FirstOrDefault();
-                foreach (var item in parseSites.Where(x => x.SiteName == site.name).First().ParseByCategory(Category))
-                {
-                    try
-                    {
-                        model.Vacancies.Add(item);
-                        model.SaveChanges();
-                    }
-                    catch
-                    {
-                        model.Vacancies.Remove(item);
-                        model.SaveChanges();
-                    }
-                }
-            }
-            catch { }
-        }
+       
+       
     }
 }
